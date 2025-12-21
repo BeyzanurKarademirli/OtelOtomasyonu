@@ -78,14 +78,16 @@ namespace OtelOtomasyonu.Forms
             // 
             // ChatForm
             // 
+            this.AutoScroll = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(484, 421);
+            this.ClientSize = new System.Drawing.Size(770, 700);
+            this.MaximumSize = new System.Drawing.Size(770, 700);
             this.Controls.Add(this.memoHistory);
             this.Controls.Add(this.panelControl1);
             this.Name = "ChatForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "AI Asistan";
+            this.Text = "Ada Lovelady's Hotel - AI Asistan";
             ((System.ComponentModel.ISupportInitialize)(this.memoHistory.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtInput.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.panelControl1)).EndInit();

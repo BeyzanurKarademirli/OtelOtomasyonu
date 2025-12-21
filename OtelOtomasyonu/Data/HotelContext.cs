@@ -15,6 +15,8 @@ namespace OtelOtomasyonu.Data
         public DbSet<Room> Rooms { get; set; }
         public DbSet<Reservation> Reservations { get; set; }
         public DbSet<GuestDetail> GuestDetails { get; set; }
+        public DbSet<Payment> Payments { get; set; }
+        public DbSet<SystemLog> SystemLogs { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

@@ -13,6 +13,13 @@ namespace OtelOtomasyonu.Services
             {
                 // In a real app, password should be hashed!
                 var user = context.Users.FirstOrDefault(u => u.Username == username && u.Password == password);
+                
+                if (user != null)
+                {
+                    user.LastLoginDate = DateTime.Now;
+                    context.SaveChanges();
+                }
+
                 return user;
             }
         }

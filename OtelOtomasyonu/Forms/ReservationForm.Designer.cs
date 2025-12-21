@@ -32,6 +32,7 @@ namespace OtelOtomasyonu.Forms
 
             this.gridControlRooms = new DevExpress.XtraGrid.GridControl();
             this.gridViewRooms = new DevExpress.XtraGrid.Views.Grid.GridView();
+            this.picBackground = new DevExpress.XtraEditors.PictureEdit();
 
             ((System.ComponentModel.ISupportInitialize)(this.panelTop)).BeginInit();
             this.panelTop.SuspendLayout();
@@ -43,7 +44,7 @@ namespace OtelOtomasyonu.Forms
             ((System.ComponentModel.ISupportInitialize)(this.panelBottom)).BeginInit();
             this.panelBottom.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.txtCustomerTC.Properties)).BeginInit();
-            
+            ((System.ComponentModel.ISupportInitialize)(this.picBackground.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControlRooms)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridViewRooms)).BeginInit();
             this.SuspendLayout();
@@ -115,13 +116,36 @@ namespace OtelOtomasyonu.Forms
             this.gridViewRooms.OptionsBehavior.Editable = false;
             this.gridViewRooms.FocusedRowChanged += new DevExpress.XtraGrid.Views.Base.FocusedRowChangedEventHandler(this.gridViewRooms_FocusedRowChanged);
 
+            // 
+            // picBackground (Otel binası arka plan)
+            // 
+            this.picBackground.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.picBackground.Location = new System.Drawing.Point(0, 0);
+            this.picBackground.Name = "picBackground";
+            this.picBackground.Properties.SizeMode = DevExpress.XtraEditors.Controls.PictureSizeMode.Stretch;
+            this.picBackground.Properties.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.picBackground.Size = new System.Drawing.Size(770, 700);
+            this.picBackground.TabIndex = 0;
+            // Arka plan görseli: picBackground.Properties.Image = Properties.Resources.HotelBuilding;
+            this.picBackground.SendToBack();
+
+            // Panel'leri yarı saydam yap
+            this.panelTop.Appearance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.panelTop.Appearance.Options.UseBackColor = true;
+            this.panelBottom.Appearance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.panelBottom.Appearance.Options.UseBackColor = true;
+            // GridControl için yarı saydamlık GridView seviyesinde ayarlanacak
+
             // Form
-            this.ClientSize = new System.Drawing.Size(800, 500);
+            this.AutoScroll = true;
+            this.ClientSize = new System.Drawing.Size(770, 700);
+            this.MaximumSize = new System.Drawing.Size(770, 700);
             this.Controls.Add(this.gridControlRooms);
-            this.Controls.Add(this.panelTop);
             this.Controls.Add(this.panelBottom);
+            this.Controls.Add(this.panelTop);
+            this.Controls.Add(this.picBackground);
             this.Name = "ReservationForm";
-            this.Text = "Yeni Rezervasyon";
+            this.Text = "Ada Lovelady's Hotel - Yeni Rezervasyon";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 
             ((System.ComponentModel.ISupportInitialize)(this.panelTop)).EndInit();
@@ -136,12 +160,13 @@ namespace OtelOtomasyonu.Forms
             this.panelBottom.ResumeLayout(false);
             this.panelBottom.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.txtCustomerTC.Properties)).EndInit();
-            
+            ((System.ComponentModel.ISupportInitialize)(this.picBackground.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControlRooms)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridViewRooms)).EndInit();
             this.ResumeLayout(false);
         }
 
+        private DevExpress.XtraEditors.PictureEdit picBackground;
         private DevExpress.XtraEditors.PanelControl panelTop;
         private DevExpress.XtraEditors.DateEdit dtStart;
         private DevExpress.XtraEditors.DateEdit dtEnd;

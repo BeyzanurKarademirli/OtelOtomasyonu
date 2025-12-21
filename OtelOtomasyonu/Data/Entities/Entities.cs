@@ -40,6 +40,11 @@ namespace OtelOtomasyonu.Data.Entities
 
         [StringLength(20)]
         public string LicensePlate { get; set; }
+
+        public DateTime? LastLoginDate { get; set; }
+
+        [StringLength(255)]
+        public string ProfilePicturePath { get; set; }
     }
 
     public enum RoomType
@@ -122,5 +127,77 @@ namespace OtelOtomasyonu.Data.Entities
         public bool DinnerIncluded { get; set; }
         
         public bool IsTemporaryExit { get; set; } // Eşyalar otelde ama kendisi yok
+    }
+
+    public enum PaymentType
+    {
+        Cash,
+        CreditCard,
+        BankTransfer,
+        Online
+    }
+
+    public enum PaymentStatus
+    {
+        Pending,
+        Completed,
+        Failed,
+        Refunded
+    }
+
+    public class Payment
+    {
+        [Key]
+        public int Id { get; set; }
+
+        public int ReservationId { get; set; }
+        [ForeignKey("ReservationId")]
+        public virtual Reservation Reservation { get; set; }
+
+        public decimal Amount { get; set; }
+
+        public PaymentType PaymentType { get; set; }
+
+        public PaymentStatus Status { get; set; }
+
+        public DateTime PaymentDate { get; set; }
+
+        [StringLength(500)]
+        public string Notes { get; set; }
+
+        [StringLength(100)]
+        public string TransactionId { get; set; }
+    }
+
+    public enum LogLevel
+    {
+        Info,
+        Warning,
+        Error,
+        Critical
+    }
+
+    public class SystemLog
+    {
+        [Key]
+        public int Id { get; set; }
+
+        public DateTime LogDate { get; set; }
+
+        public LogLevel Level { get; set; }
+
+        [Required]
+        [StringLength(100)]
+        public string Action { get; set; }
+
+        [StringLength(500)]
+        public string Description { get; set; }
+
+        public int? UserId { get; set; }
+        [ForeignKey("UserId")]
+        public virtual User User { get; set; }
+
+        [StringLength(50)]
+        public string IpAddress { get; set; }
     }
 }

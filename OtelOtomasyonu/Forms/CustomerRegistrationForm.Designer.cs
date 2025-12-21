@@ -117,7 +117,9 @@ namespace OtelOtomasyonu.Forms
             this.btnRegister.Click += new System.EventHandler(this.btnRegister_Click);
 
             // Form
-            this.ClientSize = new System.Drawing.Size(400, 400);
+            this.AutoScroll = true;
+            this.ClientSize = new System.Drawing.Size(770, 700);
+            this.MaximumSize = new System.Drawing.Size(770, 700);
             this.Controls.Add(this.btnRegister);
             this.Controls.Add(this.txtPhone);
             this.Controls.Add(this.lblPhone);
@@ -128,7 +130,7 @@ namespace OtelOtomasyonu.Forms
             this.Controls.Add(this.txtName);
             this.Controls.Add(this.lblName);
             this.Name = "CustomerRegistrationForm";
-            this.Text = "Yeni Müşteri Kaydı";
+            this.Text = "Ada Lovelady's Hotel - Yeni Müşteri Kaydı";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 
             ((System.ComponentModel.ISupportInitialize)(this.txtName.Properties)).EndInit();

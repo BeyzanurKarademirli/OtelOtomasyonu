@@ -22,5 +22,17 @@ namespace OtelOtomasyonu.Forms
             var reservationForm = new ReservationForm();
             reservationForm.ShowDialog();
         }
+
+        private void btnCheckInOut_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            var checkInOutForm = new CheckInOutForm();
+            checkInOutForm.ShowDialog();
+        }
+
+        private void btnFloorPlan_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            var floorPlanForm = new FloorPlanForm();
+            floorPlanForm.ShowDialog();
+        }
     }
 }

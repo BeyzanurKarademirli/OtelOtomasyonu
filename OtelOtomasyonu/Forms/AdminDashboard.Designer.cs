@@ -28,142 +28,224 @@ namespace OtelOtomasyonu.Forms
         /// </summary>
         private void InitializeComponent()
         {
-            this.ribbon = new DevExpress.XtraBars.Ribbon.RibbonControl();
-            this.ribbonPage1 = new DevExpress.XtraBars.Ribbon.RibbonPage();
-            this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
-            this.btnRefresh = new DevExpress.XtraBars.BarButtonItem();
-            this.btnChat = new DevExpress.XtraBars.BarButtonItem();
-            this.btnStaff = new DevExpress.XtraBars.BarButtonItem();
-            this.btnRooms = new DevExpress.XtraBars.BarButtonItem();
-            this.btnNewReservation = new DevExpress.XtraBars.BarButtonItem();
-            this.gridControl1 = new DevExpress.XtraGrid.GridControl();
-            this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
-            ((System.ComponentModel.ISupportInitialize)(this.ribbon)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
+            this.lblHotelName = new DevExpress.XtraEditors.LabelControl();
+            this.lblUserName = new DevExpress.XtraEditors.LabelControl();
+            this.pnlMenu = new System.Windows.Forms.TableLayoutPanel();
+            this.btnOdaBilgisi = new DevExpress.XtraEditors.SimpleButton();
+            this.btnPersonel = new DevExpress.XtraEditors.SimpleButton();
+            this.btnGelir = new DevExpress.XtraEditors.SimpleButton();
+            this.btnDoluluk = new DevExpress.XtraEditors.SimpleButton();
+            this.btnRaporlar = new DevExpress.XtraEditors.SimpleButton();
+            this.btnMusteri = new DevExpress.XtraEditors.SimpleButton();
+            this.btnHelp = new DevExpress.XtraEditors.SimpleButton();
+            this.picLogo = new DevExpress.XtraEditors.PictureEdit();
+            this.pnlMenu.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picLogo.Properties)).BeginInit();
             this.SuspendLayout();
             // 
-            // ribbon
+            // lblHotelName
             // 
-            this.ribbon.ExpandCollapseItem.Id = 0;
-            this.ribbon.Items.AddRange(new DevExpress.XtraBars.BarItem[] {
-            this.ribbon.ExpandCollapseItem,
-            this.btnRefresh,
-            this.btnChat,
-            this.btnStaff,
-            this.btnRooms,
-            this.btnNewReservation});
-            this.ribbon.Location = new System.Drawing.Point(0, 0);
-            this.ribbon.MaxItemId = 6;
-            this.ribbon.Name = "ribbon";
-            this.ribbon.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
-            this.ribbonPage1});
-            this.ribbon.Size = new System.Drawing.Size(800, 150);
+            this.lblHotelName.Appearance.Font = new System.Drawing.Font("Times New Roman", 36F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblHotelName.Appearance.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(215)))), ((int)(((byte)(0))))); // Pure Gold
+            this.lblHotelName.Appearance.Options.UseFont = true;
+            this.lblHotelName.Appearance.Options.UseForeColor = true;
+            this.lblHotelName.Appearance.Options.UseTextOptions = true;
+            this.lblHotelName.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            this.lblHotelName.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None;
+            this.lblHotelName.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lblHotelName.Location = new System.Drawing.Point(0, 80);
+            this.lblHotelName.Name = "lblHotelName";
+            this.lblHotelName.Padding = new System.Windows.Forms.Padding(0, 20, 0, 0);
+            this.lblHotelName.Size = new System.Drawing.Size(1280, 80);
+            this.lblHotelName.TabIndex = 0;
+            this.lblHotelName.Text = "Ada Lovelady\'s Hotel";
             // 
-            // ribbonPage1
+            // lblUserName
             // 
-            this.ribbonPage1.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
-            this.ribbonPageGroup1});
-            this.ribbonPage1.Name = "ribbonPage1";
-            this.ribbonPage1.Text = "Yönetim Paneli";
+            this.lblUserName.Appearance.Font = new System.Drawing.Font("Georgia", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblUserName.Appearance.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(198)))), ((int)(((byte)(168)))), ((int)(((byte)(105))))); // Muted Gold
+            this.lblUserName.Appearance.Options.UseFont = true;
+            this.lblUserName.Appearance.Options.UseForeColor = true;
+            this.lblUserName.Appearance.Options.UseTextOptions = true;
+            this.lblUserName.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            this.lblUserName.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None;
+            this.lblUserName.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lblUserName.Location = new System.Drawing.Point(0, 160);
+            this.lblUserName.Name = "lblUserName";
+            this.lblUserName.Size = new System.Drawing.Size(1280, 50);
+            this.lblUserName.TabIndex = 1;
+            this.lblUserName.Text = "BEYZANUR KARADEMİRLİ (YÖNETİCİ)";
             // 
-            // ribbonPageGroup1
+            // pnlMenu
             // 
-            this.ribbonPageGroup1.ItemLinks.Add(this.btnRefresh);
-            this.ribbonPageGroup1.ItemLinks.Add(this.btnChat);
-            this.ribbonPageGroup1.ItemLinks.Add(this.btnStaff);
-            this.ribbonPageGroup1.ItemLinks.Add(this.btnRooms);
-            this.ribbonPageGroup1.ItemLinks.Add(this.btnNewReservation);
-            this.ribbonPageGroup1.Name = "ribbonPageGroup1";
-            this.ribbonPageGroup1.Text = "İşlemler";
+            this.pnlMenu.BackColor = System.Drawing.Color.Transparent;
+            this.pnlMenu.ColumnCount = 2;
+            this.pnlMenu.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.pnlMenu.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.pnlMenu.Controls.Add(this.btnOdaBilgisi, 0, 0);
+            this.pnlMenu.Controls.Add(this.btnPersonel, 1, 0);
+            this.pnlMenu.Controls.Add(this.btnGelir, 0, 1);
+            this.pnlMenu.Controls.Add(this.btnDoluluk, 1, 1);
+            this.pnlMenu.Controls.Add(this.btnRaporlar, 0, 2);
+            this.pnlMenu.Controls.Add(this.btnMusteri, 1, 2);
+            this.pnlMenu.Location = new System.Drawing.Point(240, 250);
+            this.pnlMenu.Name = "pnlMenu";
+            this.pnlMenu.RowCount = 3;
+            this.pnlMenu.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33F));
+            this.pnlMenu.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33F));
+            this.pnlMenu.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33F));
+            this.pnlMenu.Size = new System.Drawing.Size(800, 300);
+            this.pnlMenu.TabIndex = 2;
             // 
-            // btnRefresh
+            // btnOdaBilgisi
             // 
-            this.btnRefresh.Caption = "Yenile";
-            this.btnRefresh.Id = 1;
-            this.btnRefresh.ImageOptions.ImageUri.Uri = "Refresh";
-            this.btnRefresh.Name = "btnRefresh";
-            this.btnRefresh.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnRefresh_ItemClick);
+            this.btnOdaBilgisi.Appearance.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Regular);
+            this.btnOdaBilgisi.Appearance.ForeColor = System.Drawing.Color.Black;
+            this.btnOdaBilgisi.Appearance.Options.UseFont = true;
+            this.btnOdaBilgisi.Appearance.Options.UseForeColor = true;
+            this.btnOdaBilgisi.ButtonStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.btnOdaBilgisi.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnOdaBilgisi.Location = new System.Drawing.Point(20, 10);
+            this.btnOdaBilgisi.Margin = new System.Windows.Forms.Padding(20, 10, 20, 10);
+            this.btnOdaBilgisi.Name = "btnOdaBilgisi";
+            this.btnOdaBilgisi.Size = new System.Drawing.Size(360, 80);
+            this.btnOdaBilgisi.TabIndex = 0;
+            this.btnOdaBilgisi.Text = "Oda Bilgisi";
             // 
-            // btnChat
+            // btnPersonel
             // 
-            this.btnChat.Caption = "AI Asistan";
-            this.btnChat.Id = 2;
-            this.btnChat.ImageOptions.ImageUri.Uri = "Chat";
-            this.btnChat.Name = "btnChat";
-            this.btnChat.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnChat_ItemClick);
+            this.btnPersonel.Appearance.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Regular);
+            this.btnPersonel.Appearance.ForeColor = System.Drawing.Color.Black;
+            this.btnPersonel.Appearance.Options.UseFont = true;
+            this.btnPersonel.Appearance.Options.UseForeColor = true;
+            this.btnPersonel.ButtonStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.btnPersonel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnPersonel.Location = new System.Drawing.Point(420, 10);
+            this.btnPersonel.Margin = new System.Windows.Forms.Padding(20, 10, 20, 10);
+            this.btnPersonel.Name = "btnPersonel";
+            this.btnPersonel.Size = new System.Drawing.Size(360, 80);
+            this.btnPersonel.TabIndex = 1;
+            this.btnPersonel.Text = "Personel Bilgileri";
             // 
-            // btnStaff
+            // btnGelir
             // 
-            this.btnStaff.Caption = "Personel Yönetimi";
-            this.btnStaff.Id = 3;
-            this.btnStaff.ImageOptions.ImageUri.Uri = "User";
-            this.btnStaff.Name = "btnStaff";
-            this.btnStaff.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnStaff_ItemClick);
+            this.btnGelir.Appearance.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Regular);
+            this.btnGelir.Appearance.ForeColor = System.Drawing.Color.Black;
+            this.btnGelir.Appearance.Options.UseFont = true;
+            this.btnGelir.Appearance.Options.UseForeColor = true;
+            this.btnGelir.ButtonStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.btnGelir.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnGelir.Location = new System.Drawing.Point(20, 110);
+            this.btnGelir.Margin = new System.Windows.Forms.Padding(20, 10, 20, 10);
+            this.btnGelir.Name = "btnGelir";
+            this.btnGelir.Size = new System.Drawing.Size(360, 80);
+            this.btnGelir.TabIndex = 2;
+            this.btnGelir.Text = "Gelir Oranı";
             // 
-            // btnRooms
+            // btnDoluluk
             // 
-            this.btnRooms.Caption = "Oda Yönetimi";
-            this.btnRooms.Id = 4;
-            this.btnRooms.ImageOptions.ImageUri.Uri = "Home";
-            this.btnRooms.Name = "btnRooms";
-            this.btnRooms.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnRooms_ItemClick);
+            this.btnDoluluk.Appearance.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Regular);
+            this.btnDoluluk.Appearance.ForeColor = System.Drawing.Color.Black;
+            this.btnDoluluk.Appearance.Options.UseFont = true;
+            this.btnDoluluk.Appearance.Options.UseForeColor = true;
+            this.btnDoluluk.ButtonStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.btnDoluluk.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnDoluluk.Location = new System.Drawing.Point(420, 110);
+            this.btnDoluluk.Margin = new System.Windows.Forms.Padding(20, 10, 20, 10);
+            this.btnDoluluk.Name = "btnDoluluk";
+            this.btnDoluluk.Size = new System.Drawing.Size(360, 80);
+            this.btnDoluluk.TabIndex = 3;
+            this.btnDoluluk.Text = "Oda Doluluk Oranı";
             // 
-            // btnNewReservation
+            // btnRaporlar
             // 
-            this.btnNewReservation.Caption = "Yeni Rezervasyon";
-            this.btnNewReservation.Id = 5;
-            this.btnNewReservation.ImageOptions.ImageUri.Uri = "Add";
-            this.btnNewReservation.Name = "btnNewReservation";
-            this.btnNewReservation.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnNewReservation_ItemClick);
+            this.btnRaporlar.Appearance.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Regular);
+            this.btnRaporlar.Appearance.ForeColor = System.Drawing.Color.Black;
+            this.btnRaporlar.Appearance.Options.UseFont = true;
+            this.btnRaporlar.Appearance.Options.UseForeColor = true;
+            this.btnRaporlar.ButtonStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.btnRaporlar.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnRaporlar.Location = new System.Drawing.Point(20, 210);
+            this.btnRaporlar.Margin = new System.Windows.Forms.Padding(20, 10, 20, 10);
+            this.btnRaporlar.Name = "btnRaporlar";
+            this.btnRaporlar.Size = new System.Drawing.Size(360, 80);
+            this.btnRaporlar.TabIndex = 4;
+            this.btnRaporlar.Text = "Raporlar";
             // 
-            // gridControl1
+            // btnMusteri
             // 
-            this.gridControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridControl1.Location = new System.Drawing.Point(0, 150);
-            this.gridControl1.MainView = this.gridView1;
-            this.gridControl1.MenuManager = this.ribbon;
-            this.gridControl1.Name = "gridControl1";
-            this.gridControl1.Size = new System.Drawing.Size(800, 450);
-            this.gridControl1.TabIndex = 1;
-            this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
-            this.gridView1});
+            this.btnMusteri.Appearance.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Regular);
+            this.btnMusteri.Appearance.ForeColor = System.Drawing.Color.Black;
+            this.btnMusteri.Appearance.Options.UseFont = true;
+            this.btnMusteri.Appearance.Options.UseForeColor = true;
+            this.btnMusteri.ButtonStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.btnMusteri.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnMusteri.Location = new System.Drawing.Point(420, 210);
+            this.btnMusteri.Margin = new System.Windows.Forms.Padding(20, 10, 20, 10);
+            this.btnMusteri.Name = "btnMusteri";
+            this.btnMusteri.Size = new System.Drawing.Size(360, 80);
+            this.btnMusteri.TabIndex = 5;
+            this.btnMusteri.Text = "Müşteri Kaydı";
             // 
-            // gridView1
+            // btnHelp
             // 
-            this.gridView1.GridControl = this.gridControl1;
-            this.gridView1.Name = "gridView1";
-            this.gridView1.OptionsBehavior.Editable = false;
+            this.btnHelp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnHelp.Appearance.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this.btnHelp.Appearance.ForeColor = System.Drawing.Color.White;
+            this.btnHelp.Appearance.Options.UseFont = true;
+            this.btnHelp.Appearance.Options.UseForeColor = true;
+            this.btnHelp.ButtonStyle = DevExpress.XtraEditors.Controls.BorderStyles.UltraFlat;
+            this.btnHelp.Location = new System.Drawing.Point(1150, 650);
+            this.btnHelp.Name = "btnHelp";
+            this.btnHelp.Size = new System.Drawing.Size(100, 100);
+            this.btnHelp.TabIndex = 3;
+            this.btnHelp.Text = "YARDIM";
+            // 
+            // picLogo (Centered Top Logo)
+            // 
+            this.picLogo.Dock = System.Windows.Forms.DockStyle.Top;
+            this.picLogo.Location = new System.Drawing.Point(0, 0);
+            this.picLogo.Name = "picLogo";
+            this.picLogo.Properties.Appearance.BackColor = System.Drawing.Color.Transparent;
+            this.picLogo.Properties.Appearance.Options.UseBackColor = true;
+            this.picLogo.Properties.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.picLogo.Properties.SizeMode = DevExpress.XtraEditors.Controls.PictureSizeMode.Zoom;
+            this.picLogo.Size = new System.Drawing.Size(1280, 80);
+            this.picLogo.TabIndex = 4;
             // 
             // AdminDashboard
             // 
-            this.ClientSize = new System.Drawing.Size(800, 600);
-            this.Controls.Add(this.gridControl1);
-            this.Controls.Add(this.ribbon);
+            this.Appearance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(10)))), ((int)(((byte)(10)))));
+            this.Appearance.Options.UseBackColor = true;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(1280, 768);
+            this.Controls.Add(this.pnlMenu);
+            this.Controls.Add(this.lblUserName);
+            this.Controls.Add(this.lblHotelName);
+            this.Controls.Add(this.picLogo);
+            this.Controls.Add(this.btnHelp);
             this.Name = "AdminDashboard";
-            this.Ribbon = this.ribbon;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Yönetici Paneli - Otel Otomasyonu";
+            this.Text = "Ada Lovelady\'s Hotel - Yönetim Paneli";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
-            ((System.ComponentModel.ISupportInitialize)(this.ribbon)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
+            this.pnlMenu.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.picLogo.Properties)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
 
-        private DevExpress.XtraBars.Ribbon.RibbonControl ribbon;
-        private DevExpress.XtraBars.Ribbon.RibbonPage ribbonPage1;
-        private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup1;
-        private DevExpress.XtraBars.BarButtonItem btnChat;
-        private DevExpress.XtraBars.BarButtonItem btnStaff;
-        private DevExpress.XtraBars.BarButtonItem btnRooms;
-        private DevExpress.XtraBars.BarButtonItem btnNewReservation;
-        private DevExpress.XtraBars.BarButtonItem btnRefresh;
-        private DevExpress.XtraGrid.GridControl gridControl1;
-        private DevExpress.XtraGrid.Views.Grid.GridView gridView1;
+        private DevExpress.XtraEditors.LabelControl lblHotelName;
+        private DevExpress.XtraEditors.LabelControl lblUserName;
+        private System.Windows.Forms.TableLayoutPanel pnlMenu;
+        private DevExpress.XtraEditors.SimpleButton btnOdaBilgisi;
+        private DevExpress.XtraEditors.SimpleButton btnPersonel;
+        private DevExpress.XtraEditors.SimpleButton btnGelir;
+        private DevExpress.XtraEditors.SimpleButton btnDoluluk;
+        private DevExpress.XtraEditors.SimpleButton btnRaporlar;
+        private DevExpress.XtraEditors.SimpleButton btnMusteri;
+        private DevExpress.XtraEditors.SimpleButton btnHelp;
+        private DevExpress.XtraEditors.PictureEdit picLogo;
     }
 }

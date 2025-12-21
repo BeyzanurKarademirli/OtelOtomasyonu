@@ -8,6 +8,8 @@ namespace OtelOtomasyonu.Forms
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup1;
         private DevExpress.XtraBars.BarButtonItem btnNewCustomer;
         private DevExpress.XtraBars.BarButtonItem btnNewReservation;
+        private DevExpress.XtraBars.BarButtonItem btnCheckInOut;
+        private DevExpress.XtraBars.BarButtonItem btnFloorPlan;
 
         protected override void Dispose(bool disposing)
         {
@@ -25,6 +27,8 @@ namespace OtelOtomasyonu.Forms
             this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.btnNewCustomer = new DevExpress.XtraBars.BarButtonItem();
             this.btnNewReservation = new DevExpress.XtraBars.BarButtonItem();
+            this.btnCheckInOut = new DevExpress.XtraBars.BarButtonItem();
+            this.btnFloorPlan = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)(this.ribbon)).BeginInit();
             this.SuspendLayout();
 
@@ -35,9 +39,11 @@ namespace OtelOtomasyonu.Forms
             this.ribbon.Items.AddRange(new DevExpress.XtraBars.BarItem[] {
             this.ribbon.ExpandCollapseItem,
             this.btnNewCustomer,
-            this.btnNewReservation});
+            this.btnNewReservation,
+            this.btnCheckInOut,
+            this.btnFloorPlan});
             this.ribbon.Location = new System.Drawing.Point(0, 0);
-            this.ribbon.MaxItemId = 3;
+            this.ribbon.MaxItemId = 5;
             this.ribbon.Name = "ribbon";
             this.ribbon.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.ribbonPage1});
@@ -59,6 +65,20 @@ namespace OtelOtomasyonu.Forms
             this.btnNewReservation.Name = "btnNewReservation";
             this.btnNewReservation.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnNewReservation_ItemClick);
 
+            // btnCheckInOut
+            this.btnCheckInOut.Caption = "Check-In/Check-Out";
+            this.btnCheckInOut.Id = 3;
+            this.btnCheckInOut.ImageOptions.ImageUri.Uri = "Check";
+            this.btnCheckInOut.Name = "btnCheckInOut";
+            this.btnCheckInOut.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnCheckInOut_ItemClick);
+
+            // btnFloorPlan
+            this.btnFloorPlan.Caption = "Kat Planı";
+            this.btnFloorPlan.Id = 4;
+            this.btnFloorPlan.ImageOptions.ImageUri.Uri = "Map";
+            this.btnFloorPlan.Name = "btnFloorPlan";
+            this.btnFloorPlan.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnFloorPlan_ItemClick);
+
             // RibbonPage
             this.ribbonPage1.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
             this.ribbonPageGroup1});
@@ -68,6 +88,8 @@ namespace OtelOtomasyonu.Forms
             // RibbonPageGroup
             this.ribbonPageGroup1.ItemLinks.Add(this.btnNewCustomer);
             this.ribbonPageGroup1.ItemLinks.Add(this.btnNewReservation);
+            this.ribbonPageGroup1.ItemLinks.Add(this.btnCheckInOut);
+            this.ribbonPageGroup1.ItemLinks.Add(this.btnFloorPlan);
             this.ribbonPageGroup1.Name = "ribbonPageGroup1";
             this.ribbonPageGroup1.Text = "Müşteri İşlemleri";
 
@@ -76,7 +98,7 @@ namespace OtelOtomasyonu.Forms
             this.Controls.Add(this.ribbon);
             this.Name = "StaffDashboard";
             this.Ribbon = this.ribbon;
-            this.Text = "Personel Paneli - Otel Otomasyonu";
+            this.Text = "Ada Lovelady's Hotel - Personel Paneli";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
 

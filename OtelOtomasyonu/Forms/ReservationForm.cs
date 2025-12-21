@@ -21,6 +21,22 @@ namespace OtelOtomasyonu.Forms
             
             dtStart.DateTime = DateTime.Today;
             dtEnd.DateTime = DateTime.Today.AddDays(1);
+            
+            LoadBackgroundImage();
+        }
+
+        private void LoadBackgroundImage()
+        {
+            try
+            {
+                // Otel binası görseli Resources'dan yükle
+                // picBackground.Properties.Image = Properties.Resources.HotelBuilding;
+                // Görsel yoksa sessizce devam et
+            }
+            catch
+            {
+                // Görsel yoksa sessizce devam et
+            }
         }
 
         private void btnSearchRooms_Click(object sender, EventArgs e)

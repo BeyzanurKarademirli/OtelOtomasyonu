@@ -89,11 +89,13 @@ namespace OtelOtomasyonu.Forms
             this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
 
             // Form
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.AutoScroll = true;
+            this.ClientSize = new System.Drawing.Size(770, 700);
+            this.MaximumSize = new System.Drawing.Size(770, 700);
             this.Controls.Add(this.gridControl1);
             this.Controls.Add(this.panelControl1);
             this.Name = "RoomForm";
-            this.Text = "Oda Yönetimi";
+            this.Text = "Ada Lovelady's Hotel - Oda Yönetimi";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).EndInit();
