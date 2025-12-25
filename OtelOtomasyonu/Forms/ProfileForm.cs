@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using OtelOtomasyonu.Data;
+using OtelOtomasyonu.Data.Entities;
 using OtelOtomasyonu.Services;
 
 namespace OtelOtomasyonu.Forms
@@ -12,9 +13,11 @@ namespace OtelOtomasyonu.Forms
     {
         private int _userId;
 
-        public ProfileForm()
+        public ProfileForm(int? userId = null)
         {
             InitializeComponent();
+            _userId = userId.HasValue ? userId.Value : (Session.CurrentUser?.Id ?? 0);
+
             this.FormBorderStyle = FormBorderStyle.None; // Remove Purple Border
             
             // Allow Dragging
@@ -43,6 +46,18 @@ namespace OtelOtomasyonu.Forms
             // Event Wiring
             btnSave.Click += BtnSave_Click;
             btnUpdatePass.Click += BtnUpdatePass_Click;
+            
+            // If viewing another user (Admin View), hide Security Tab and Save Button?
+            // For now, let's keep it open or just hide password tab if not current user.
+            if (userId.HasValue && userId.Value != Session.CurrentUser?.Id)
+            {
+                // Viewing someone else: Hide Password Update, maybe Disable Editing?
+                // keeping it simple per request "profili açılsın"
+                xtraTabControl1.TabPages.Remove(tabSecurity); 
+                btnSave.Visible = false; // Read-only view for now? or allow admin edit name?
+                // Let's allow Admin to edit Name/Phone but not password here.
+                btnSave.Visible = true; 
+            }
         }
 
         [System.Runtime.InteropServices.DllImport("user32.dll")]
@@ -140,47 +155,64 @@ namespace OtelOtomasyonu.Forms
 
         private void LoadData()
         {
-            if (Session.CurrentUser == null)
+            using (var context = new HotelContext())
             {
-                XtraMessageBox.Show("Oturum bilgisi bulunamadı. Lütfen tekrar giriş yapın.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                this.Close();
-                return;
+                var user = context.Users.FirstOrDefault(u => u.Id == _userId);
+                
+                if (user == null)
+                {
+                     XtraMessageBox.Show("Kayıt bulunamadı.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                     this.Close();
+                     return;
+                }
+
+                // Fill Left Card
+                lblFullName.Text = $"{user.Name} {user.Surname}".ToUpper();
+                
+                // Role gösterimi - Personel için Departman ve Görev bilgisi de göster
+                if (user.Role == UserRole.Staff && !string.IsNullOrEmpty(user.JobTitle))
+                {
+                    string deptName = GetDepartmentTurkishName(user.Department);
+                    lblRole.Text = $"{deptName} - {user.JobTitle}".ToUpper();
+                }
+                else
+                {
+                    lblRole.Text = user.Role.ToString().ToUpper();
+                }
+                
+                if (user.LastLoginDate.HasValue)
+                    lblLastLogin.Text = "Son Giriş: " + user.LastLoginDate.Value.ToString("g");
+                else
+                    lblLastLogin.Text = "Son Giriş: Yok";
+
+                // Fill Form Fields
+                txtUsername.Text = user.Username;
+                txtName.Text = user.Name;
+                txtSurname.Text = user.Surname;
+                txtPhone.Text = user.Phone;
+                txtEmail.Text = user.Email;
+                txtPlate.Text = user.LicensePlate;
+                
+                // Personel bilgileri varsa göster (eğer ProfileForm'da bu alanlar varsa)
+                // Not: ProfileForm.Designer.cs'de bu alanlar yoksa eklenmeli
+
+                // Event Wiring
+                picProfile.Cursor = Cursors.Hand;
+                picProfile.Click += PicProfile_Click;
+
+                // Default Avatar (Robot Icon) or Custom
+                if (!string.IsNullOrEmpty(user.ProfilePicturePath) && System.IO.File.Exists(user.ProfilePicturePath))
+                {
+                    picProfile.Image = Image.FromFile(user.ProfilePicturePath);
+                }
+                else
+                {
+                    string avatarPath = System.IO.Path.Combine(Application.StartupPath, "gold_bot_circle.png");
+                    if (System.IO.File.Exists(avatarPath))
+                        picProfile.Image = Image.FromFile(avatarPath);
+                }
+                picProfile.Properties.SizeMode = DevExpress.XtraEditors.Controls.PictureSizeMode.Zoom;
             }
-
-            _userId = Session.CurrentUser.Id;
-
-            // Fill Left Card
-            lblFullName.Text = $"{Session.CurrentUser.Name} {Session.CurrentUser.Surname}".ToUpper();
-            lblRole.Text = Session.CurrentUser.Role.ToString().ToUpper();
-            if (Session.CurrentUser.LastLoginDate.HasValue)
-                lblLastLogin.Text = "Son Giriş: " + Session.CurrentUser.LastLoginDate.Value.ToString("g");
-            else
-                lblLastLogin.Text = "Son Giriş: İlk Oturum";
-
-            // Fill Form Fields
-            txtUsername.Text = Session.CurrentUser.Username;
-            txtName.Text = Session.CurrentUser.Name;
-            txtSurname.Text = Session.CurrentUser.Surname;
-            txtPhone.Text = Session.CurrentUser.Phone;
-            txtEmail.Text = Session.CurrentUser.Email;
-            txtPlate.Text = Session.CurrentUser.LicensePlate;
-
-            // Event Wiring
-            picProfile.Cursor = Cursors.Hand;
-            picProfile.Click += PicProfile_Click;
-
-            // Default Avatar (Robot Icon) or Custom
-            if (!string.IsNullOrEmpty(Session.CurrentUser.ProfilePicturePath) && System.IO.File.Exists(Session.CurrentUser.ProfilePicturePath))
-            {
-                picProfile.Image = Image.FromFile(Session.CurrentUser.ProfilePicturePath);
-            }
-            else
-            {
-                string avatarPath = System.IO.Path.Combine(Application.StartupPath, "gold_bot_circle.png");
-                if (System.IO.File.Exists(avatarPath))
-                    picProfile.Image = Image.FromFile(avatarPath);
-            }
-            picProfile.Properties.SizeMode = DevExpress.XtraEditors.Controls.PictureSizeMode.Zoom;
         }
 
         private void PicProfile_Click(object sender, EventArgs e)
@@ -316,6 +348,19 @@ namespace OtelOtomasyonu.Forms
             catch (Exception ex)
             {
                 XtraMessageBox.Show("Şifre güncelleme hatası: " + ex.Message, "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private string GetDepartmentTurkishName(Department dept)
+        {
+            switch (dept)
+            {
+                case Department.FrontOffice: return "Ön Büro";
+                case Department.Housekeeping: return "Kat Hizmetleri";
+                case Department.FoodAndBeverage: return "Yiyecek ve İçecek";
+                case Department.BackOffice: return "Yönetim ve İdari";
+                case Department.TechnicalAndSecurity: return "Teknik Servis ve Güvenlik";
+                default: return dept.ToString();
             }
         }
     }

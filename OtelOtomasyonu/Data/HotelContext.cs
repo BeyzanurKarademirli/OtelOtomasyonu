@@ -8,7 +8,7 @@ namespace OtelOtomasyonu.Data
         public HotelContext() : base("name=HotelContext")
         {
             // Database initialization strategy
-            Database.SetInitializer(new DropCreateDatabaseIfModelChanges<HotelContext>());
+            Database.SetInitializer(new HotelDbInitializer());
         }
 
         public DbSet<User> Users { get; set; }
@@ -17,6 +17,7 @@ namespace OtelOtomasyonu.Data
         public DbSet<GuestDetail> GuestDetails { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<SystemLog> SystemLogs { get; set; }
+        public DbSet<Expense> Expenses { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

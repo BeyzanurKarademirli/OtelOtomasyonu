@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using OtelOtomasyonu.Data;
 using OtelOtomasyonu.Data.Entities;
+using OtelOtomasyonu.Services;
 using System.Linq;
 
 namespace OtelOtomasyonu.Forms
@@ -126,12 +127,66 @@ namespace OtelOtomasyonu.Forms
                 {
                     // Generate Transparency for IE compatibility
                     string transparentLogoPath = CreateTransparentLogo(logoPath);
+                    
+                    // Convert to Base64
+                    byte[] imageBytes = System.IO.File.ReadAllBytes(transparentLogoPath);
+                    string base64Logo = Convert.ToBase64String(imageBytes);
+                    string logoDataUrl = $"data:image/png;base64,{base64Logo}";
 
+                    // HTML5 Canvas Implementation (The "Nuclear Option" for IE compatibility)
+                    // We use globalCompositeOperation = 'source-atop' to clip the shine to the logo.
                     logoHtml = $@"
                     <div class='logo-container'>
-                        <img src=""file:///{transparentLogoPath.Replace(@"\", @"/")}"" class='logo-img' />
-                        <div class='shine'></div>
-                    </div>";
+                        <canvas id='logoCanvas' width='350' height='100'></canvas>
+                    </div>
+                    <script>
+                        var canvas = document.getElementById('logoCanvas');
+                        var ctx = canvas.getContext('2d');
+                        var img = new Image();
+                        img.onload = function() {{
+                            animate();
+                        }};
+                        img.src = '{logoDataUrl}';
+
+                        var shinePos = -150; // Start position
+                        var speed = 2.5; // Slower elegant speed
+
+                        function animate() {{
+                            ctx.clearRect(0, 0, canvas.width, canvas.height);
+                            
+                            // 1. Draw Logo (Destination)
+                            ctx.globalCompositeOperation = 'source-over';
+                            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                            // 2. Draw Shine (Source-Atop: Only draws where logo exists)
+                            ctx.globalCompositeOperation = 'source-atop';
+                            
+                            // Create Gradient
+                            // Skew geometry by drawing a tilted rect or just a gradient? 
+                            // Gradient is easier.
+                            var gradient = ctx.createLinearGradient(shinePos, 0, shinePos + 150, 0);
+                            gradient.addColorStop(0, 'rgba(255, 255, 255, 0)');
+                            gradient.addColorStop(0.5, 'rgba(255, 255, 255, 0.8)'); // Distinct Shine
+                            gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+
+                            ctx.fillStyle = gradient;
+                            // Skew transform for the angle
+                            ctx.save();
+                            ctx.transform(1, 0, -0.4, 1, 0, 0); // Skew X
+                            ctx.fillRect(shinePos, 0, 200, canvas.height); // Draw rect
+                            ctx.restore();
+
+                            // Update Position
+                            shinePos += speed;
+                            if (shinePos > canvas.width + 100) {{
+                                shinePos = -150; // Loop
+                            }}
+
+                            // Request Frame - IE11 supports this usually, otherwise fallback
+                            if (window.requestAnimationFrame) requestAnimationFrame(animate);
+                            else setTimeout(animate, 16);
+                        }}
+                    </script>";
                 }
 
                 string commonCss = $@"
@@ -145,34 +200,12 @@ namespace OtelOtomasyonu.Forms
         /* Logo Styles */
         .logo-container {{
             position: absolute;
-            top: 10px; 
-            left: -40px; /* Pull left to compensate for padding */
+            top: 0px !important; 
+            left: -40px !important;
             width: 350px; 
+            height: 100px;
             z-index: 9999;
-            /* mix-blend-mode removed as IE doesn't support it */
-        }}
-        .logo-img {{
-            width: 100%;
-            height: auto;
-            display: block;
-        }}
-        /* CSS Shine Animation */
-        .shine {{
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 50%;
-            height: 100%;
-            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%);
-            transform: skewX(-25deg);
-            animation: shineAnim 3s infinite;
-        }}
-        @keyframes shineAnim {{
-            0% {{ left: -100%; }}
-            20% {{ left: 200%; }}
-            100% {{ left: 200%; }}
-        }}
-                ";
+        }}";
 
                 if (System.IO.File.Exists(videoPath))
                 {
@@ -252,13 +285,31 @@ namespace OtelOtomasyonu.Forms
                     OtelOtomasyonu.Services.Session.CurrentUser = user;
 
                     this.Hide();
-                    if (user.Role == UserRole.Staff)
+                    if (user.Role == UserRole.Admin)
                     {
-                        new StaffDashboard().ShowDialog();
+                        // Admin her zaman AdminDashboard'a gider
+                        new AdminDashboard().ShowDialog();
+                    }
+                    else if (user.Role == UserRole.Staff)
+                    {
+                        // Sadece İdari ve Yönetim (BackOffice) ve Ön Büro (FrontOffice) personelleri girebilir
+                        if (user.Department == Department.BackOffice || user.Department == Department.FrontOffice)
+                        {
+                            // Personeller StaffDashboard'a gider
+                            new StaffDashboard().ShowDialog();
+                        }
+                        else
+                        {
+                            XtraMessageBox.Show("Bu sisteme erişim yetkiniz bulunmamaktadır. Sadece İdari Yönetim ve Ön Büro personeli sisteme giriş yapabilir.", "Erişim Reddedildi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            OtelOtomasyonu.Services.Session.CurrentUser = null;
+                            return;
+                        }
                     }
                     else
                     {
-                        new AdminDashboard().ShowDialog();
+                        // Müşteriler için özel bir panel yok (şimdilik)
+                        XtraMessageBox.Show("Müşteri girişi henüz aktif değil.", "Bilgi", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        return;
                     }
                     this.Close();
                 }

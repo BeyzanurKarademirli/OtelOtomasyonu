@@ -1,9 +1,17 @@
+
 namespace OtelOtomasyonu.Forms
 {
     partial class RoomForm
     {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
         private System.ComponentModel.IContainer components = null;
 
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -13,112 +21,107 @@ namespace OtelOtomasyonu.Forms
             base.Dispose(disposing);
         }
 
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
         private void InitializeComponent()
         {
-            this.gridControl1 = new DevExpress.XtraGrid.GridControl();
-            this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
-            this.panelControl1 = new DevExpress.XtraEditors.PanelControl();
-            this.txtRoomNumber = new DevExpress.XtraEditors.TextEdit();
-            this.cmbRoomType = new DevExpress.XtraEditors.ComboBoxEdit();
-            this.txtPrice = new DevExpress.XtraEditors.TextEdit();
-            this.btnAdd = new DevExpress.XtraEditors.SimpleButton();
-            this.btnDelete = new DevExpress.XtraEditors.SimpleButton();
-            this.lblNumber = new DevExpress.XtraEditors.LabelControl();
-            this.lblType = new DevExpress.XtraEditors.LabelControl();
-            this.lblPrice = new DevExpress.XtraEditors.LabelControl();
-
-            ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.panelControl1)).BeginInit();
-            this.panelControl1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.txtRoomNumber.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cmbRoomType.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.txtPrice.Properties)).BeginInit();
+            this.pnlSidebar = new DevExpress.XtraEditors.PanelControl();
+            this.lstFloors = new DevExpress.XtraEditors.ListBoxControl();
+            this.lblFloorsTitle = new DevExpress.XtraEditors.LabelControl();
+            this.pnlMap = new DevExpress.XtraEditors.PanelControl();
+            ((System.ComponentModel.ISupportInitialize)(this.pnlSidebar)).BeginInit();
+            this.pnlSidebar.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.lstFloors)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pnlMap)).BeginInit();
             this.SuspendLayout();
-
-            // GridControl
-            this.gridControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridControl1.MainView = this.gridView1;
-            this.gridControl1.Name = "gridControl1";
-            this.gridControl1.TabIndex = 0;
-            this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { this.gridView1 });
-
-            // GridView
-            this.gridView1.GridControl = this.gridControl1;
-            this.gridView1.Name = "gridView1";
-            this.gridView1.OptionsBehavior.Editable = false;
-
-            // PanelControl
-            this.panelControl1.Controls.Add(this.lblPrice);
-            this.panelControl1.Controls.Add(this.lblType);
-            this.panelControl1.Controls.Add(this.lblNumber);
-            this.panelControl1.Controls.Add(this.btnDelete);
-            this.panelControl1.Controls.Add(this.btnAdd);
-            this.panelControl1.Controls.Add(this.txtPrice);
-            this.panelControl1.Controls.Add(this.cmbRoomType);
-            this.panelControl1.Controls.Add(this.txtRoomNumber);
-            this.panelControl1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelControl1.Height = 80;
-            this.panelControl1.Name = "panelControl1";
-
-            // Controls
-            this.lblNumber.Text = "Oda No:";
-            this.lblNumber.Location = new System.Drawing.Point(10, 15);
-            
-            this.txtRoomNumber.Location = new System.Drawing.Point(60, 12);
-            this.txtRoomNumber.Size = new System.Drawing.Size(100, 20);
-
-            this.lblType.Text = "Tip:";
-            this.lblType.Location = new System.Drawing.Point(180, 15);
-
-            this.cmbRoomType.Location = new System.Drawing.Point(210, 12);
-            this.cmbRoomType.Size = new System.Drawing.Size(120, 20);
-
-            this.lblPrice.Text = "Fiyat:";
-            this.lblPrice.Location = new System.Drawing.Point(350, 15);
-
-            this.txtPrice.Location = new System.Drawing.Point(390, 12);
-            this.txtPrice.Size = new System.Drawing.Size(100, 20);
-
-            this.btnAdd.Text = "Ekle";
-            this.btnAdd.Location = new System.Drawing.Point(520, 10);
-            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
-
-            this.btnDelete.Text = "Seçiliyi Sil";
-            this.btnDelete.Location = new System.Drawing.Point(610, 10);
-            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
-
-            // Form
-            this.AutoScroll = true;
-            this.ClientSize = new System.Drawing.Size(770, 700);
-            this.MaximumSize = new System.Drawing.Size(770, 700);
-            this.Controls.Add(this.gridControl1);
-            this.Controls.Add(this.panelControl1);
+            // 
+            // pnlSidebar
+            // 
+            this.pnlSidebar.Appearance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
+            this.pnlSidebar.Appearance.Options.UseBackColor = true;
+            this.pnlSidebar.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.pnlSidebar.Controls.Add(this.lstFloors);
+            this.pnlSidebar.Controls.Add(this.lblFloorsTitle);
+            this.pnlSidebar.Dock = System.Windows.Forms.DockStyle.Left;
+            this.pnlSidebar.Location = new System.Drawing.Point(0, 0);
+            this.pnlSidebar.Name = "pnlSidebar";
+            this.pnlSidebar.Padding = new System.Windows.Forms.Padding(10);
+            this.pnlSidebar.Size = new System.Drawing.Size(200, 700);
+            this.pnlSidebar.TabIndex = 0;
+            // 
+            // lstFloors
+            // 
+            this.lstFloors.Appearance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
+            this.lstFloors.Appearance.Font = new System.Drawing.Font("Segoe UI", 12F);
+            this.lstFloors.Appearance.ForeColor = System.Drawing.Color.Gold;
+            this.lstFloors.Appearance.Options.UseBackColor = true;
+            this.lstFloors.Appearance.Options.UseFont = true;
+            this.lstFloors.Appearance.Options.UseForeColor = true;
+            this.lstFloors.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.lstFloors.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lstFloors.ItemHeight = 50;
+            this.lstFloors.Location = new System.Drawing.Point(10, 50);
+            this.lstFloors.Name = "lstFloors";
+            this.lstFloors.Size = new System.Drawing.Size(180, 640);
+            this.lstFloors.TabIndex = 1;
+            this.lstFloors.SelectedIndexChanged += new System.EventHandler(this.LstFloors_SelectedIndexChanged);
+            // 
+            // lblFloorsTitle
+            // 
+            this.lblFloorsTitle.Appearance.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
+            this.lblFloorsTitle.Appearance.ForeColor = System.Drawing.Color.Gold;
+            this.lblFloorsTitle.Appearance.Options.UseFont = true;
+            this.lblFloorsTitle.Appearance.Options.UseForeColor = true;
+            this.lblFloorsTitle.Appearance.Options.UseTextOptions = true;
+            this.lblFloorsTitle.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            this.lblFloorsTitle.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None;
+            this.lblFloorsTitle.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lblFloorsTitle.Location = new System.Drawing.Point(10, 10);
+            this.lblFloorsTitle.Name = "lblFloorsTitle";
+            this.lblFloorsTitle.Size = new System.Drawing.Size(180, 40);
+            this.lblFloorsTitle.TabIndex = 0;
+            this.lblFloorsTitle.Text = "KATLAR";
+            // 
+            // pnlMap
+            // 
+            this.pnlMap.Appearance.BackColor = System.Drawing.Color.Black;
+            this.pnlMap.Appearance.Options.UseBackColor = true;
+            this.pnlMap.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.pnlMap.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.pnlMap.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlMap.Location = new System.Drawing.Point(200, 0);
+            this.pnlMap.Name = "pnlMap";
+            this.pnlMap.Size = new System.Drawing.Size(1000, 700);
+            this.pnlMap.TabIndex = 1;
+            // 
+            // RoomForm
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(1200, 700);
+            this.Controls.Add(this.pnlMap);
+            this.Controls.Add(this.pnlSidebar);
             this.Name = "RoomForm";
             this.Text = "Ada Lovelady's Hotel - Oda Yönetimi";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-
-            ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.panelControl1)).EndInit();
-            this.panelControl1.ResumeLayout(false);
-            this.panelControl1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.txtRoomNumber.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cmbRoomType.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.txtPrice.Properties)).EndInit();
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.Load += new System.EventHandler(this.RoomForm_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.pnlSidebar)).EndInit();
+            this.pnlSidebar.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.lstFloors)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pnlMap)).EndInit();
             this.ResumeLayout(false);
+
         }
 
-        private DevExpress.XtraGrid.GridControl gridControl1;
-        private DevExpress.XtraGrid.Views.Grid.GridView gridView1;
-        private DevExpress.XtraEditors.PanelControl panelControl1;
-        private DevExpress.XtraEditors.TextEdit txtRoomNumber;
-        private DevExpress.XtraEditors.ComboBoxEdit cmbRoomType;
-        private DevExpress.XtraEditors.TextEdit txtPrice;
-        private DevExpress.XtraEditors.SimpleButton btnAdd;
-        private DevExpress.XtraEditors.SimpleButton btnDelete;
-        private DevExpress.XtraEditors.LabelControl lblNumber;
-        private DevExpress.XtraEditors.LabelControl lblType;
-        private DevExpress.XtraEditors.LabelControl lblPrice;
+        #endregion
+
+        private DevExpress.XtraEditors.PanelControl pnlSidebar;
+        private DevExpress.XtraEditors.ListBoxControl lstFloors;
+        private DevExpress.XtraEditors.LabelControl lblFloorsTitle;
+        private DevExpress.XtraEditors.PanelControl pnlMap;
     }
 }

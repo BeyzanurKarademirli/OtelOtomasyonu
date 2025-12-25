@@ -3,6 +3,8 @@ using System.Drawing;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using System.IO;
+using OtelOtomasyonu.Services;
+using OtelOtomasyonu.Data.Entities;
 
 namespace OtelOtomasyonu.Forms
 {
@@ -13,6 +15,7 @@ namespace OtelOtomasyonu.Forms
             InitializeComponent();
             LoadAssets();
             SetupEvents();
+            pnlStats.Visible = false; // Hidden by default
         }
 
         private void LoadAssets()
@@ -104,7 +107,7 @@ namespace OtelOtomasyonu.Forms
                     };
 
                     picLogo.Click += (s, e) => {
-                        OpenForm(new HotelInfoForm());
+                        new SlideShowForm().ShowDialog();
                     };
                 }
 
@@ -312,25 +315,51 @@ namespace OtelOtomasyonu.Forms
 
         private void SetupEvents()
         {
+            var currentUser = Session.CurrentUser;
+            
             btnOdaBilgisi.Click += (s, e) => OpenForm(new RoomForm());
-            btnPersonel.Click += (s, e) => OpenForm(new StaffForm());
+            
+            // Personel bilgileri - Admin her zaman görebilir
+            if (currentUser != null && (currentUser.Role == UserRole.Admin || AuthorizationService.CanViewStaffInfo(currentUser)))
+            {
+                btnPersonel.Click += (s, e) => OpenForm(new UsersForm());
+            }
+            else
+            {
+                btnPersonel.Visible = false; // Gizle
+            }
+            
             btnMusteri.Click += (s, e) => OpenForm(new CustomerRegistrationForm()); // Assuming this is the customer form
             
             // Analytics - Placeholders or future forms
-            btnGelir.Click += (s, e) => ShowInfo("Gelir Oranı Raporu yakında eklenecek.");
-            btnDoluluk.Click += (s, e) => ShowInfo("Oda Doluluk Oranı Raporu yakında eklenecek.");
-            btnRaporlar.Click += (s, e) => ShowInfo("Detaylı Raporlar modülü yakında eklenecek.");
-
-            // Help / Chat
-            btnHelp.Click += (s, e) => {
-                // Check if ChatForm exists or open simple help
-                try {
-                    var chatForm = new ChatForm();
-                    chatForm.Show();
-                } catch {
-                    ShowInfo("Yapay Zeka Asistanı başlatılıyor...");
-                }
+            // Analytics
+            // Gelir oranı - sadece yetkili olanlar görebilir
+            if (currentUser != null && AuthorizationService.CanViewRevenue(currentUser))
+            {
+                btnGelir.Click += (s, e) => {
+                     IncomeForm incomeForm = new IncomeForm();
+                     incomeForm.Show();
+                };
+            }
+            else
+            {
+                btnGelir.Visible = false; // Gizle
+            }
+            btnDoluluk.Click += (s, e) => {
+                 OccupancyForm occupancyForm = new OccupancyForm();
+                 occupancyForm.Show();
             };
+
+            
+            // Rename Button
+            btnRaporlar.Text = "Sertifikalar";
+            btnRaporlar.Click += (s, e) => {
+                 CertificateForm certForm = new CertificateForm();
+                 certForm.Show();
+            };
+
+            // Help / Chat - Kaldırıldı
+            btnHelp.Visible = false;
 
             // Resize handling for centering
             this.Resize += AdminDashboard_Resize;
@@ -354,10 +383,12 @@ namespace OtelOtomasyonu.Forms
             {
                 // Slightly larger buttons as requested
                 pnlMenu.Size = new Size(960, 360); 
-                
+
+                int baseY = (this.ClientSize.Height - pnlMenu.Height) / 2 + 50;
+
                 pnlMenu.Location = new Point(
                     (this.ClientSize.Width - pnlMenu.Width) / 2,
-                    (this.ClientSize.Height - pnlMenu.Height) / 2 + 50 
+                    baseY
                 );
             }
 
@@ -513,5 +544,92 @@ namespace OtelOtomasyonu.Forms
         {
             XtraMessageBox.Show(message, "Bilgi", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
+
+        private void btnRooms_Click(object sender, EventArgs e)
+        {
+            RoomForm roomForm = new RoomForm();
+            roomForm.Show();
+        }
+        private void LoadFinancialStats()
+        {
+            try
+            {
+                OtelOtomasyonu.Services.FinancialService service = new OtelOtomasyonu.Services.FinancialService();
+                var stats = service.GetDashboardStats();
+
+                // 1. Update Labels
+                lblDailyIncome.Text = $"Günlük Gelir:\n{stats.DailyIncome:C2}";
+                lblWeeklyIncome.Text = $"Haftalık Gelir:\n{stats.WeeklyIncome:C2}";
+                lblMonthlyIncome.Text = $"Aylık Gelir:\n{stats.MonthlyIncome:C2}";
+
+                lblDailyExpense.Text = $"Günlük Gider:\n{stats.DailyExpense:C2}";
+                lblWeeklyExpense.Text = $"Haftalık Gider:\n{stats.WeeklyExpense:C2}";
+                lblMonthlyExpense.Text = $"Aylık Gider:\n{stats.MonthlyExpense:C2}";
+
+                // Colors
+                lblDailyIncome.Appearance.ForeColor = Color.LightGreen;
+                lblWeeklyIncome.Appearance.ForeColor = Color.LightGreen;
+                lblMonthlyIncome.Appearance.ForeColor = Color.LightGreen;
+                
+                lblDailyExpense.Appearance.ForeColor = Color.IndianRed;
+                lblWeeklyExpense.Appearance.ForeColor = Color.IndianRed;
+                lblMonthlyExpense.Appearance.ForeColor = Color.IndianRed;
+
+                // 2. Bind Chart
+                BindFinancialChart(service);
+            }
+            catch (Exception ex)
+            {
+                XtraMessageBox.Show("Hata: " + ex.Message + "\n" + ex.StackTrace, "Finansal Veri Hatası", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void BindFinancialChart(OtelOtomasyonu.Services.FinancialService service)
+        {
+            chartFinancial.Series.Clear();
+
+            // Create Series
+            DevExpress.XtraCharts.Series seriesIncome = new DevExpress.XtraCharts.Series("Gelir", DevExpress.XtraCharts.ViewType.Line);
+            DevExpress.XtraCharts.Series seriesExpense = new DevExpress.XtraCharts.Series("Gider", DevExpress.XtraCharts.ViewType.Line);
+
+            // Fetch Data for Last 7 Days (Daily Trend)
+            DateTime start = DateTime.Today.AddDays(-6);
+            for (int i = 0; i < 7; i++)
+            {
+                DateTime day = start.AddDays(i);
+                DateTime nextDay = day.AddDays(1);
+
+                decimal income = service.GetTotalIncome(day, nextDay);
+                decimal expense = service.GetTotalExpenses(day, nextDay);
+
+                seriesIncome.Points.Add(new DevExpress.XtraCharts.SeriesPoint(day.ToString("dd MMM"), income));
+                seriesExpense.Points.Add(new DevExpress.XtraCharts.SeriesPoint(day.ToString("dd MMM"), expense));
+            }
+
+            // Styling Income (Green)
+            seriesIncome.View.Color = Color.LightGreen;
+            ((DevExpress.XtraCharts.LineSeriesView)seriesIncome.View).MarkerVisibility = DevExpress.Utils.DefaultBoolean.True;
+            
+            // Styling Expense (Red)
+            seriesExpense.View.Color = Color.IndianRed;
+            ((DevExpress.XtraCharts.LineSeriesView)seriesExpense.View).MarkerVisibility = DevExpress.Utils.DefaultBoolean.True;
+
+            // Add to Chart
+            chartFinancial.Series.Add(seriesIncome);
+            chartFinancial.Series.Add(seriesExpense);
+
+            // Chart Appearance (Dark Theme)
+            chartFinancial.AppearanceNameSerializable = "Dark";
+            chartFinancial.BackColor = Color.Transparent;
+            
+            // Diagram customization to match dark theme
+            if (chartFinancial.Diagram is DevExpress.XtraCharts.XYDiagram diagram)
+            {
+                diagram.DefaultPane.BackColor = Color.Transparent;
+                diagram.AxisX.Label.TextColor = Color.Gold;
+                diagram.AxisY.Label.TextColor = Color.Gold;
+            }
+        }
     }
 }
+

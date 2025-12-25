@@ -41,8 +41,87 @@ namespace OtelOtomasyonu.Forms
             this.picLogo = new DevExpress.XtraEditors.PictureEdit();
             this.pnlMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picLogo.Properties)).BeginInit();
+            
+            // Stats Panel
+            this.pnlStats = new DevExpress.XtraEditors.PanelControl();
+            // Solid dark gray to ensure visibility
+            this.pnlStats.Appearance.BackColor = System.Drawing.Color.FromArgb(40, 40, 40); 
+            this.pnlStats.Appearance.Options.UseBackColor = true;
+            this.pnlStats.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.Simple;
+            this.pnlStats.Appearance.BorderColor = System.Drawing.Color.Gold;
+
+            this.chartFinancial = new DevExpress.XtraCharts.ChartControl();
+            this.tblStatsLabels = new System.Windows.Forms.TableLayoutPanel();
+            this.lblDailyIncome = new DevExpress.XtraEditors.LabelControl();
+            this.lblWeeklyIncome = new DevExpress.XtraEditors.LabelControl();
+            this.lblMonthlyIncome = new DevExpress.XtraEditors.LabelControl();
+            this.lblDailyExpense = new DevExpress.XtraEditors.LabelControl();
+            this.lblWeeklyExpense = new DevExpress.XtraEditors.LabelControl();
+            this.lblMonthlyExpense = new DevExpress.XtraEditors.LabelControl();
+
+            ((System.ComponentModel.ISupportInitialize)(this.pnlStats)).BeginInit();
+            this.pnlStats.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chartFinancial)).BeginInit();
+            this.tblStatsLabels.SuspendLayout();
+
             this.SuspendLayout();
+
             // 
+            // pnlStats
+            // 
+            this.pnlStats.Controls.Add(this.chartFinancial);
+            this.pnlStats.Controls.Add(this.tblStatsLabels);
+            this.pnlStats.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pnlStats.Location = new System.Drawing.Point(0, 500);
+            this.pnlStats.Name = "pnlStats";
+            this.pnlStats.Size = new System.Drawing.Size(1280, 268);
+            this.pnlStats.TabIndex = 10;
+            this.pnlStats.Appearance.BackColor = System.Drawing.Color.Transparent;
+            this.pnlStats.Appearance.Options.UseBackColor = true;
+            this.pnlStats.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+
+            // 
+            // chartFinancial
+            // 
+            this.chartFinancial.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.chartFinancial.Location = new System.Drawing.Point(0, 0);
+            this.chartFinancial.Name = "chartFinancial";
+            this.chartFinancial.SeriesSerializable = new DevExpress.XtraCharts.Series[0];
+            this.chartFinancial.Size = new System.Drawing.Size(900, 268);
+            this.chartFinancial.TabIndex = 0;
+            // 
+            // tblStatsLabels
+            // 
+            this.tblStatsLabels.ColumnCount = 2;
+            this.tblStatsLabels.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tblStatsLabels.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            
+            this.tblStatsLabels.Controls.Add(this.lblDailyIncome, 0, 0);
+            this.tblStatsLabels.Controls.Add(this.lblDailyExpense, 1, 0);
+            this.tblStatsLabels.Controls.Add(this.lblWeeklyIncome, 0, 1);
+            this.tblStatsLabels.Controls.Add(this.lblWeeklyExpense, 1, 1);
+            this.tblStatsLabels.Controls.Add(this.lblMonthlyIncome, 0, 2);
+            this.tblStatsLabels.Controls.Add(this.lblMonthlyExpense, 1, 2);
+            
+            this.tblStatsLabels.Dock = System.Windows.Forms.DockStyle.Right;
+            this.tblStatsLabels.Location = new System.Drawing.Point(900, 0);
+            this.tblStatsLabels.Name = "tblStatsLabels";
+            this.tblStatsLabels.RowCount = 3;
+            this.tblStatsLabels.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33F));
+            this.tblStatsLabels.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33F));
+            this.tblStatsLabels.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33F));
+            this.tblStatsLabels.Size = new System.Drawing.Size(380, 268);
+            this.tblStatsLabels.TabIndex = 1;
+            // 
+            // Labels Styling
+            // 
+            InitializeLabel(this.lblDailyIncome, "Günlük: 0 TL");
+            InitializeLabel(this.lblWeeklyIncome, "Haftalık: 0 TL");
+            InitializeLabel(this.lblMonthlyIncome, "Aylık: 0 TL");
+            InitializeLabel(this.lblDailyExpense, "Gider (Gün): 0 TL");
+            InitializeLabel(this.lblWeeklyExpense, "Gider (Hafta): 0 TL");
+            InitializeLabel(this.lblMonthlyExpense, "Gider (Ay): 0 TL");
+
             // lblHotelName
             // 
             this.lblHotelName.Appearance.Font = new System.Drawing.Font("Times New Roman", 36F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -125,7 +204,7 @@ namespace OtelOtomasyonu.Forms
             this.btnPersonel.Name = "btnPersonel";
             this.btnPersonel.Size = new System.Drawing.Size(360, 80);
             this.btnPersonel.TabIndex = 1;
-            this.btnPersonel.Text = "Personel Bilgileri";
+            this.btnPersonel.Text = "Personel / Müşteri Bilgileri";
             // 
             // btnGelir
             // 
@@ -220,6 +299,7 @@ namespace OtelOtomasyonu.Forms
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1280, 768);
+            this.Controls.Add(this.pnlStats);
             this.Controls.Add(this.pnlMenu);
             this.Controls.Add(this.lblUserName);
             this.Controls.Add(this.lblHotelName);
@@ -247,5 +327,25 @@ namespace OtelOtomasyonu.Forms
         private DevExpress.XtraEditors.SimpleButton btnMusteri;
         private DevExpress.XtraEditors.SimpleButton btnHelp;
         private DevExpress.XtraEditors.PictureEdit picLogo;
+        private void InitializeLabel(DevExpress.XtraEditors.LabelControl lbl, string text)
+        {
+            lbl.Text = text;
+            lbl.Appearance.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            lbl.Appearance.ForeColor = System.Drawing.Color.Gold;
+            lbl.Dock = System.Windows.Forms.DockStyle.Fill;
+            lbl.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None;
+            lbl.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            lbl.Appearance.TextOptions.VAlignment = DevExpress.Utils.VertAlignment.Center;
+        }
+
+        private DevExpress.XtraEditors.PanelControl pnlStats;
+        private DevExpress.XtraCharts.ChartControl chartFinancial;
+        private DevExpress.XtraEditors.LabelControl lblDailyIncome;
+        private DevExpress.XtraEditors.LabelControl lblWeeklyIncome;
+        private DevExpress.XtraEditors.LabelControl lblMonthlyIncome;
+        private DevExpress.XtraEditors.LabelControl lblDailyExpense;
+        private DevExpress.XtraEditors.LabelControl lblWeeklyExpense;
+        private DevExpress.XtraEditors.LabelControl lblMonthlyExpense;
+        private System.Windows.Forms.TableLayoutPanel tblStatsLabels;
     }
 }

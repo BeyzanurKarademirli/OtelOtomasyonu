@@ -12,6 +12,15 @@ namespace OtelOtomasyonu.Data.Entities
         Customer
     }
 
+    public enum Department
+    {
+        FrontOffice,        // Ön Büro
+        Housekeeping,       // Kat Hizmetleri
+        FoodAndBeverage,    // Yiyecek ve İçecek
+        BackOffice,         // Yönetim ve İdari
+        TechnicalAndSecurity // Teknik Servis ve Güvenlik
+    }
+
     public class User
     {
         [Key]
@@ -38,6 +47,17 @@ namespace OtelOtomasyonu.Data.Entities
         [StringLength(20)]
         public string Phone { get; set; }
 
+        // New Personnel Fields
+        public Department Department { get; set; }
+
+        [StringLength(100)]
+        public string JobTitle { get; set; } // e.g. "Resepsiyonist", "Aşçıbaşı"
+
+        public decimal Salary { get; set; }
+
+        [StringLength(50)]
+        public string WorkHours { get; set; } // e.g. "09:00 - 18:00"
+
         [StringLength(20)]
         public string LicensePlate { get; set; }
 
@@ -45,12 +65,20 @@ namespace OtelOtomasyonu.Data.Entities
 
         [StringLength(255)]
         public string ProfilePicturePath { get; set; }
+
+        public Guid? SelectionToken { get; set; } // For Remote Room Selection
+
+        public Guid? RegistrationGroupId { get; set; } // Aynı kayıt ekranında kaydedilen müşterileri gruplamak için
+
+        public int? StayDays { get; set; } // Kaç gün kalacakları bilgisi
     }
 
     public enum RoomType
     {
         Single,
         Double,
+        Triple,
+        Quadruple,
         Suite
     }
 
@@ -68,7 +96,7 @@ namespace OtelOtomasyonu.Data.Entities
         public int Id { get; set; }
         
         [Required]
-        [StringLength(10)]
+        [StringLength(50)]
         public string RoomNumber { get; set; }
         
         public RoomType Type { get; set; }
@@ -76,6 +104,9 @@ namespace OtelOtomasyonu.Data.Entities
         public decimal Price { get; set; }
         
         public RoomStatus Status { get; set; }
+
+        public int Floor { get; set; } // 0=Zemin, 1=1.Kat...
+        public string Description { get; set; } // Force DB Reset
     }
 
     public enum ReservationStatus
@@ -107,6 +138,11 @@ namespace OtelOtomasyonu.Data.Entities
         public ReservationStatus Status { get; set; }
 
         public virtual GuestDetail GuestDetail { get; set; }
+
+        // Remote/Online Selection Fields
+        public Guid? SelectionToken { get; set; } // Link identifier
+        public DateTime? TokenExpiry { get; set; }
+        public bool IsOnlineSelection { get; set; } // Flag to distinguish mail-based reservations
     }
 
     public class GuestDetail
@@ -199,5 +235,29 @@ namespace OtelOtomasyonu.Data.Entities
 
         [StringLength(50)]
         public string IpAddress { get; set; }
+    }
+    public enum ExpenseCategory
+    {
+        Material,
+        Bill,           // Fatura (Elektrik, Su, İnternet)
+        Maintenance,    // Bakım Onarım
+        Kitchen,        // Mutfak Masrafı
+        Staff,          // Personel (Maaş harici anlık ödemeler vs)
+        Other
+    }
+
+    public class Expense
+    {
+        [Key]
+        public int Id { get; set; }
+
+        public ExpenseCategory Category { get; set; }
+
+        public decimal Amount { get; set; }
+
+        public DateTime Date { get; set; }
+
+        [StringLength(200)]
+        public string Description { get; set; }
     }
 }

@@ -1,0 +1,871 @@
+@model List<OtelOtomasyonuWeb.Data.Room>
+
+@{
+    Layout = null;
+    var token = ViewBag.Token;
+    var customerName = ViewBag.CustomerName;
+    
+    // Helper function to get room capacity from Type
+    Func<int, int> getCapacity = (type) => {
+        switch(type) {
+            case 0: return 1; // Single
+            case 1: return 2; // Double
+            case 2: return 3; // Triple
+            case 3: return 4; // Quadruple
+            case 4: return 4; // Suite
+            default: return 1;
+        }
+    };
+    
+    // Helper function to get room type name
+    Func<int, string> getTypeName = (type) => {
+        switch(type) {
+            case 0: return "Tek Kişilik";
+            case 1: return "Çift Kişilik";
+            case 2: return "Üç Kişilik";
+            case 3: return "Dört Kişilik";
+            case 4: return "Suit";
+            default: return "Tek Kişilik";
+        }
+    };
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ada Lovelady's Hotel - Oda Seçimi</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #D4AF37;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: auto;
+            display: flex;
+            gap: 30px;
+        }
+
+        .left-panel {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .right-panel {
+            flex: 2;
+        }
+
+        h1 {
+            border-bottom: 2px solid #D4AF37;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .control-panel {
+            background-color: #1a1a1a;
+            padding: 20px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            border: 1px solid #333;
+            flex-wrap: wrap;
+        }
+
+        select, button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #D4AF37;
+            background-color: #000;
+            color: #D4AF37;
+            cursor: pointer;
+        }
+
+        button {
+            background-color: #D4AF37;
+            color: #000;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        button:hover:not(:disabled) {
+            background-color: #ffd700;
+            transform: scale(1.05);
+        }
+
+        button:disabled {
+            background-color: #555;
+            color: #888;
+            cursor: not-allowed;
+            border-color: #555;
+        }
+
+        /* Floor Plan Container */
+        .floor-plan-container {
+            position: relative;
+            display: inline-block;
+            border: 2px solid #D4AF37;
+            border-radius: 10px;
+            overflow: visible;
+            width: 100%;
+        }
+
+        .floor-plan-img {
+            display: block;
+            width: 100%;
+            max-width: 1000px;
+            height: auto;
+            min-height: 400px;
+            background-color: #1a1a1a;
+            border: 1px solid #333;
+            /* Görsel üzerindeki 101, 102 gibi sayılar overlay'lerle kapatılacak */
+        }
+
+        /* Room Number Overlays - 1-10 */
+        .room-overlay {
+            position: absolute;
+            background-color: rgba(0, 0, 0, 0.98);
+            color: #D4AF37;
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            border: 4px solid #D4AF37;
+            font-weight: bold;
+            font-size: 28px;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 1000;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.7), inset 0 0 10px rgba(0, 0, 0, 0.5);
+            /* Görsel üzerindeki 101, 102 gibi sayıları kapatmak için daha opak ve büyük */
+        }
+
+        .room-overlay:hover {
+            background-color: #D4AF37;
+            color: #000;
+            transform: scale(1.15);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.8);
+        }
+
+        .room-overlay.occupied {
+            background-color: rgba(255, 0, 0, 0.7);
+            cursor: not-allowed;
+            display: none; /* Dolu odaları gösterme */
+        }
+
+        /* Left Side Rooms (1-5) */
+        .pos-1 { top: 13%; left: 8%; } /* 1'i aşağı indirdik */
+        .pos-2 { top: 26%; left: 8%; }
+        .pos-3 { top: 42%; left: 8%; }
+        .pos-4 { top: 58%; left: 8%; }
+        .pos-5 { top: 74%; left: 8%; }
+
+        /* Right Side Rooms (6-10) */
+        .pos-6 { top: 13%; right: 8%; } /* 6'yı aşağı indirdik */
+        .pos-7 { top: 26%; right: 8%; }
+        .pos-8 { top: 42%; right: 8%; }
+        .pos-9 { top: 58%; right: 8%; }
+        .pos-10 { top: 74%; right: 8%; }
+
+        /* Room Info Panel */
+        .room-info-panel {
+            background-color: #1a1a1a;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #333;
+            margin-bottom: 20px;
+        }
+
+        .room-info-panel h3 {
+            margin-top: 0;
+            color: #D4AF37;
+            border-bottom: 1px solid #D4AF37;
+            padding-bottom: 10px;
+        }
+
+        .room-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .room-item {
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #000;
+            border: 1px solid #333;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .room-item.selected {
+            border-color: #D4AF37;
+            background-color: #2a2a2a;
+        }
+
+        .room-number {
+            font-weight: bold;
+            font-size: 18px;
+            color: #D4AF37;
+        }
+
+        .room-details {
+            text-align: right;
+            font-size: 14px;
+        }
+
+        .room-price {
+            color: #D4AF37;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .room-capacity {
+            color: #888;
+            font-size: 12px;
+        }
+
+        .no-rooms {
+            text-align: center;
+            color: #888;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="left-panel">
+            <h1>Hoş Geldiniz, @customerName</h1>
+            @{
+                var groupSize = ViewBag.GroupSize as int? ?? 1;
+                var groupMembers = ViewBag.GroupMembers as List<dynamic> ?? new List<dynamic>();
+            }
+            @if (groupSize > 1)
+            {
+                <div style="background-color: #1a1a1a; padding: 15px; border-radius: 10px; border: 2px solid #D4AF37; margin-bottom: 20px;">
+                    <p style="margin: 0; text-align: center; color: #D4AF37; font-weight: bold;">
+                        Grup Kaydı: @groupSize Kişi
+                    </p>
+                    <p style="margin: 5px 0 0 0; text-align: center; color: #888; font-size: 14px;">
+                        Lütfen her grup üyesi için bir oda seçiniz.
+                    </p>
+                </div>
+            }
+            <p style="text-align: center; margin-bottom: 20px;">Lütfen konaklamak istediğiniz katı ve odayı seçiniz.</p>
+
+            <div class="control-panel">
+                <select id="ddlFloor" onchange="filterRooms()">
+                    <option value="" disabled selected>Kat Seçiniz</option>
+                    @for (int i = 1; i <= 10; i++)
+                    {
+                        <option value="@i">@i. Kat</option>
+                    }
+                </select>
+
+                <select id="ddlRoom" disabled>
+                    <option value="">Önce Kat Seçin</option>
+                </select>
+
+                @if (groupSize > 1)
+                {
+                    <select id="ddlMember" disabled>
+                        <option value="">Kişi Seçiniz</option>
+                        @{
+                            var members = ViewBag.GroupMembers as System.Collections.Generic.List<OtelOtomasyonuWeb.Data.User>;
+                            if (members != null)
+                            {
+                                foreach (var member in members)
+                                {
+                                    var memberName = "";
+                                    if (!string.IsNullOrEmpty(member.Name) || !string.IsNullOrEmpty(member.Surname))
+                                    {
+                                        memberName = $"{member.Name ?? ""} {member.Surname ?? ""}".Trim();
+                                    }
+                                    else
+                                    {
+                                        memberName = $"Kişi {member.Id}";
+                                    }
+                                    <option value="@member.Id">@memberName</option>
+                                }
+                            }
+                            else
+                            {
+                                <option value="" disabled>Grup üyeleri yüklenemedi</option>
+                            }
+                        }
+                    </select>
+                    <button id="btnAddRoom" onclick="addRoomSelection()" disabled>ODA EKLE</button>
+                    <button id="btnComplete" onclick="completeSelection()" disabled style="display: none;">SEÇİMLERİ TAMAMLA</button>
+                    <button id="btnConfirm" onclick="confirmSelection()" disabled style="display: none;">SEÇİMİ ONAYLA</button>
+                }
+                else
+                {
+                    <button id="btnConfirm" onclick="confirmSelection()" disabled>SEÇİMİ ONAYLA</button>
+                }
+            </div>
+
+            <div class="room-info-panel" id="selectedRoomsPanel" style="display: none;">
+                <h3>Seçilen Odalar</h3>
+                <div id="selectedRoomsContent"></div>
+            </div>
+
+            <div class="room-info-panel">
+                <h3>Oda Bilgileri</h3>
+                <div id="roomInfoContent">
+                    <p class="no-rooms">Lütfen önce bir kat seçiniz.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-panel">
+            <h2 style="text-align: center; margin-bottom: 20px;">Kat Krokisi</h2>
+            <div class="floor-plan-container">
+                <!-- Floor Plan Image - Use floor_upper.jpg from Resources -->
+                <img src="/images/floor_upper.jpg" alt="Kat Planı" class="floor-plan-img" id="floorPlanImage" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
+                <div id="imagePlaceholder" style="display: none; padding: 50px; text-align: center; color: #888;">
+                    <p>Kat krokisi görseli yüklenemedi.</p>
+                    <p>Lütfen görseli wwwroot/images/ klasörüne ekleyin.</p>
+                </div>
+                
+                <!-- Room Overlays will be dynamically added here -->
+                <div id="roomOverlays"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data from Server
+        var allRooms = [];
+        @{
+            var roomList = Model.Where(r => r.RoomNumber != null).ToList();
+            foreach (var room in roomList)
+            {
+                var roomDisplayNumber = room.RoomNumber != null && room.RoomNumber.Length >= 3 
+                    ? room.RoomNumber.Substring(room.RoomNumber.Length - 2) 
+                    : (room.RoomNumber ?? "");
+                var capacity = getCapacity(room.Type);
+                var typeName = getTypeName(room.Type);
+                var roomNumberEscaped = (room.RoomNumber ?? "").Replace("\\", "\\\\").Replace("'", "\\'").Replace("\"", "\\\"").Replace("\r", "").Replace("\n", "");
+                var displayNumberEscaped = roomDisplayNumber.Replace("\\", "\\\\").Replace("'", "\\'").Replace("\"", "\\\"").Replace("\r", "").Replace("\n", "");
+                // Türkçe karakterler için HttpUtility kullan
+                var typeNameEscaped = System.Web.HttpUtility.JavaScriptStringEncode(typeName, false);
+                <text>
+        allRooms.push({
+            number: '@roomNumberEscaped',
+            displayNumber: '@displayNumberEscaped',
+            floor: @room.Floor,
+            status: @room.Status,
+            type: @room.Type,
+            capacity: @capacity,
+            typeName: '@Html.Raw(typeNameEscaped)',
+            price: @room.Price.ToString(System.Globalization.CultureInfo.InvariantCulture)
+        });
+                </text>
+            }
+        }
+
+        // Grup bilgisi
+        var groupSize = @(ViewBag.GroupSize as int? ?? 1);
+        var groupMembers = [];
+        @{
+            var groupMembersList = ViewBag.GroupMembers as System.Collections.Generic.List<OtelOtomasyonuWeb.Data.User>;
+            if (groupMembersList != null)
+            {
+                foreach (var member in groupMembersList)
+                {
+                    var memberName = "";
+                    if (!string.IsNullOrEmpty(member.Name) || !string.IsNullOrEmpty(member.Surname))
+                    {
+                        memberName = $"{member.Name ?? ""} {member.Surname ?? ""}".Trim();
+                    }
+                    else
+                    {
+                        memberName = $"Kişi {member.Id}";
+                    }
+                    var memberNameEscaped = System.Web.HttpUtility.JavaScriptStringEncode(memberName, false);
+                    <text>
+        groupMembers.push({
+            Id: @member.Id,
+            Name: '@Html.Raw(memberNameEscaped)',
+            IsMain: @((!string.IsNullOrEmpty(member.Email) || member.SelectionToken != null) ? "true" : "false")
+        });
+                    </text>
+                }
+            }
+        }
+        
+        console.log('Group Size:', groupSize);
+        console.log('Group Members:', groupMembers);
+        var selectedRooms = []; // {memberId, memberName, roomNumber, roomDisplayNumber}
+
+        var selectedFloor = null;
+        var selectedRoom = null;
+
+        function filterRooms() {
+            selectedFloor = parseInt(document.getElementById("ddlFloor").value);
+            var ddlRoom = document.getElementById("ddlRoom");
+            
+            // Clear items
+            ddlRoom.innerHTML = '<option value="">Oda Seçiniz</option>';
+
+            if (!selectedFloor) {
+                ddlRoom.disabled = true;
+                var ddlMember = document.getElementById("ddlMember");
+                if (ddlMember) ddlMember.disabled = true;
+                var btnAddRoom = document.getElementById("btnAddRoom");
+                if (btnAddRoom) btnAddRoom.disabled = true;
+                updateRoomInfo([]);
+                updateFloorPlan([]);
+                return;
+            }
+
+            // Enable dropdowns when floor is selected
+            ddlRoom.disabled = false;
+            var ddlMember = document.getElementById("ddlMember");
+            if (ddlMember) {
+                ddlMember.disabled = false;
+            }
+
+            // Filter - sadece müsait odalar (status = 0)
+            var roomsOnFloor = allRooms.filter(r => {
+                var floorMatch = parseInt(r.floor) === selectedFloor;
+                var statusMatch = parseInt(r.status) === 0;
+                return floorMatch && statusMatch;
+            });
+
+            console.log('Selected floor:', selectedFloor);
+            console.log('All rooms:', allRooms);
+            console.log('Rooms on floor:', roomsOnFloor);
+
+            if (roomsOnFloor.length === 0) {
+                var option = document.createElement("option");
+                option.value = "";
+                option.text = "Bu katta müsait oda yok";
+                option.disabled = true;
+                ddlRoom.add(option);
+                ddlRoom.disabled = true;
+                // Disable confirm button when no rooms available
+                var btnConfirm = document.getElementById("btnConfirm");
+                if (btnConfirm) btnConfirm.disabled = true;
+                updateRoomInfo([]);
+                updateFloorPlan([]);
+            } else {
+                // Clear first option
+                ddlRoom.innerHTML = '<option value="">Oda Seçiniz</option>';
+                
+                // Sort rooms by display number (1-10)
+                roomsOnFloor.sort(function(a, b) {
+                    return parseInt(a.displayNumber) - parseInt(b.displayNumber);
+                });
+                
+                roomsOnFloor.forEach(function(room) {
+                    var option = document.createElement("option");
+                    option.value = room.number;
+                    // Show as "Oda 1", "Oda 2", etc. not "Oda 101"
+                    option.text = "Oda " + room.displayNumber + " (" + room.typeName + " - " + room.price + " TL)";
+                    ddlRoom.appendChild(option);
+                });
+                
+                // Add change event to dropdown
+                ddlRoom.addEventListener('change', function() {
+                    var selectedRoomNumber = this.value;
+                    console.log('Room dropdown changed to:', selectedRoomNumber);
+                    if (selectedRoomNumber && selectedRoomNumber !== "") {
+                        // Highlight selected room in info panel
+                        document.querySelectorAll('.room-item').forEach(i => {
+                            i.classList.remove('selected');
+                            if (i.dataset.room === selectedRoomNumber) {
+                                i.classList.add('selected');
+                            }
+                        });
+                    }
+                });
+                
+                // Enable buttons when rooms are available
+                if (groupSize > 1) {
+                    var btnAddRoom = document.getElementById("btnAddRoom");
+                    if (btnAddRoom) {
+                        btnAddRoom.disabled = false;
+                    }
+                } else {
+                    var btnConfirm = document.getElementById("btnConfirm");
+                    if (btnConfirm) {
+                        btnConfirm.disabled = false;
+                    }
+                }
+                
+                updateRoomInfo(roomsOnFloor);
+                updateFloorPlan(roomsOnFloor);
+            }
+        }
+
+        function updateSelectedRoomsDisplay() {
+            var panel = document.getElementById("selectedRoomsPanel");
+            var content = document.getElementById("selectedRoomsContent");
+            
+            if (selectedRooms.length === 0) {
+                panel.style.display = "none";
+                return;
+            }
+            
+            panel.style.display = "block";
+            var html = '<ul class="room-list">';
+            selectedRooms.forEach(function(selection) {
+                html += '<li class="room-item selected">';
+                html += '<span class="room-number">' + selection.memberName + ' - Oda ' + selection.roomDisplayNumber + '</span>';
+                html += '<button onclick="removeRoomSelection(' + selection.memberId + ')" style="background-color: #ff4444; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">Kaldır</button>';
+                html += '</li>';
+            });
+            html += '</ul>';
+            content.innerHTML = html;
+            
+            // Check if all members have rooms selected
+            var btnComplete = document.getElementById("btnComplete");
+            if (btnComplete && selectedRooms.length >= groupSize) {
+                btnComplete.disabled = false;
+                btnComplete.style.display = "inline-block";
+            } else if (btnComplete) {
+                btnComplete.disabled = true;
+                btnComplete.style.display = "none";
+            }
+        }
+
+        function addRoomSelection() {
+            var token = '@Html.Raw(token?.ToString() ?? "")';
+            var ddlFloor = document.getElementById("ddlFloor");
+            var ddlRoom = document.getElementById("ddlRoom");
+            var ddlMember = document.getElementById("ddlMember");
+            var roomId = ddlRoom.value;
+            var memberId = groupSize > 1 ? (ddlMember ? ddlMember.value : null) : null;
+
+            if (!roomId || roomId === "" || roomId === "0") {
+                alert("Lütfen bir oda seçiniz.");
+                return;
+            }
+
+            if (groupSize > 1 && (!memberId || memberId === "")) {
+                alert("Lütfen bir kişi seçiniz.");
+                return;
+            }
+
+            // Check if this member already has a room selected
+            if (selectedRooms.some(s => s.memberId == memberId)) {
+                alert("Bu kişi için zaten bir oda seçilmiş.");
+                return;
+            }
+
+            // Oda seçimi kontrolü backend'de yapılıyor (kapasite ve grup kontrolü)
+
+            var room = allRooms.find(r => r.number === roomId);
+            if (!room) {
+                alert("Oda bulunamadı.");
+                return;
+            }
+
+            var memberName = groupSize > 1 && memberId 
+                ? (groupMembers.find(m => m.Id == memberId)?.Name || "Kişi")
+                : '@Html.Raw(customerName)';
+
+            // Disable button during request
+            var btnAddRoom = document.getElementById('btnAddRoom');
+            if (btnAddRoom) btnAddRoom.disabled = true;
+
+            // Post
+            var body = 'token=' + encodeURIComponent(token) + '&roomId=' + encodeURIComponent(roomId);
+            if (memberId) {
+                body += '&memberId=' + encodeURIComponent(memberId);
+            }
+
+            fetch('/RoomSelection/Select', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: body
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(text => {
+                        throw new Error('HTTP ' + response.status + ': ' + text);
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    // Add to selected rooms
+                    selectedRooms.push({
+                        memberId: memberId || 0,
+                        memberName: memberName,
+                        roomNumber: roomId,
+                        roomDisplayNumber: room.displayNumber
+                    });
+                    updateSelectedRoomsDisplay();
+                    
+                    // Clear selections
+                    ddlRoom.value = "";
+                    if (ddlMember) ddlMember.value = "";
+                    
+                    alert(data.message);
+                } else {
+                    alert("Hata: " + (data.message || "Bilinmeyen hata"));
+                }
+            })
+            .catch(error => {
+                console.error('Error details:', error);
+                alert("Bir hata oluştu: " + error.message);
+            })
+            .finally(() => {
+                if (btnAddRoom) btnAddRoom.disabled = false;
+            });
+        }
+
+        function removeRoomSelection(memberId) {
+            if (confirm("Bu oda seçimini kaldırmak istediğinize emin misiniz?")) {
+                selectedRooms = selectedRooms.filter(s => s.memberId != memberId);
+                updateSelectedRoomsDisplay();
+            }
+        }
+
+        function completeSelection() {
+            var token = '@Html.Raw(token?.ToString() ?? "")';
+            
+            if (selectedRooms.length < groupSize) {
+                alert("Tüm grup üyeleri için oda seçilmedi. Lütfen " + (groupSize - selectedRooms.length) + " kişi için daha oda seçiniz.");
+                return;
+            }
+
+            if (!confirm("Tüm seçimler tamamlandı. Onaylıyor musunuz?")) return;
+
+            var btnComplete = document.getElementById('btnComplete');
+            if (btnComplete) btnComplete.disabled = true;
+
+            fetch('/RoomSelection/CompleteSelection', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'token=' + encodeURIComponent(token)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(text => {
+                        throw new Error('HTTP ' + response.status + ': ' + text);
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    // Ödeme sayfasına yönlendir
+                    if (data.redirectUrl) {
+                        window.location.href = data.redirectUrl;
+                    } else {
+                        alert(data.message);
+                        window.location.href = '/RoomSelection/Success';
+                    }
+                } else {
+                    alert("Hata: " + (data.message || "Bilinmeyen hata"));
+                }
+            })
+            .catch(error => {
+                console.error('Error details:', error);
+                alert("Bir hata oluştu: " + error.message);
+            })
+            .finally(() => {
+                if (btnComplete) btnComplete.disabled = false;
+            });
+        }
+
+        function updateRoomInfo(rooms) {
+            var content = document.getElementById("roomInfoContent");
+            
+            if (rooms.length === 0) {
+                content.innerHTML = '<p class="no-rooms">Bu katta müsait oda bulunmamaktadır.</p>';
+                return;
+            }
+
+            // Sort by display number
+            rooms.sort(function(a, b) {
+                return parseInt(a.displayNumber) - parseInt(b.displayNumber);
+            });
+
+            var html = '<ul class="room-list">';
+            rooms.forEach(function(room) {
+                html += '<li class="room-item" data-room="' + room.number + '">';
+                // Show as "Oda 1", "Oda 2", etc. not "Oda 101"
+                html += '<span class="room-number">Oda ' + room.displayNumber + '</span>';
+                html += '<div class="room-details">';
+                html += '<div class="room-price">' + room.price + ' TL</div>';
+                html += '<div class="room-capacity">' + room.typeName + ' (' + room.capacity + ' Kişi)</div>';
+                html += '</div>';
+                html += '</li>';
+            });
+            html += '</ul>';
+            content.innerHTML = html;
+
+            // Add click handlers
+            document.querySelectorAll('.room-item').forEach(function(item) {
+                item.addEventListener('click', function() {
+                    var roomNumber = this.dataset.room;
+                    console.log('Room item clicked:', roomNumber);
+                    document.querySelectorAll('.room-item').forEach(i => i.classList.remove('selected'));
+                    this.classList.add('selected');
+                    var ddlRoom = document.getElementById('ddlRoom');
+                    if (ddlRoom) {
+                        ddlRoom.value = roomNumber;
+                        // Trigger change event
+                        var event = new Event('change', { bubbles: true });
+                        ddlRoom.dispatchEvent(event);
+                    }
+                });
+            });
+        }
+
+        function updateFloorPlan(rooms) {
+            var container = document.getElementById("roomOverlays");
+            container.innerHTML = '';
+
+            // Room positions (1-10)
+            var positions = [
+                { class: 'pos-1', num: 1 },
+                { class: 'pos-2', num: 2 },
+                { class: 'pos-3', num: 3 },
+                { class: 'pos-4', num: 4 },
+                { class: 'pos-5', num: 5 },
+                { class: 'pos-6', num: 6 },
+                { class: 'pos-7', num: 7 },
+                { class: 'pos-8', num: 8 },
+                { class: 'pos-9', num: 9 },
+                { class: 'pos-10', num: 10 }
+            ];
+
+            // Map rooms to positions (1-10 based on last 2 digits)
+            // Rooms are numbered 101-110, 201-210, etc. We need to map them to positions 1-10
+            positions.forEach(function(pos) {
+                // Find room where displayNumber matches position (1-10)
+                var room = rooms.find(r => {
+                    var displayNum = parseInt(r.displayNumber);
+                    return displayNum === pos.num;
+                });
+
+                if (room) {
+                    var overlay = document.createElement('div');
+                    overlay.className = 'room-overlay ' + pos.class;
+                    // ALWAYS show 1-10, not 101-110
+                    overlay.textContent = pos.num.toString();
+                    overlay.title = 'Oda ' + pos.num + ' (' + room.number + ') - ' + room.typeName + ' - ' + room.price + ' TL';
+                    overlay.onclick = function() {
+                        var ddlRoom = document.getElementById('ddlRoom');
+                        if (ddlRoom && !ddlRoom.disabled) {
+                            ddlRoom.value = room.number;
+                            // Trigger change event manually
+                            var event = new Event('change', { bubbles: true });
+                            ddlRoom.dispatchEvent(event);
+                            // Also update visual selection
+                            document.querySelectorAll('.room-item').forEach(i => {
+                                i.classList.remove('selected');
+                                if (i.dataset.room === room.number) {
+                                    i.classList.add('selected');
+                                }
+                            });
+                        }
+                    };
+                    container.appendChild(overlay);
+                }
+            });
+        }
+
+        function confirmSelection() {
+            // Tek kişilik kayıt için eski mantık
+            if (groupSize === 1) {
+                var token = '@Html.Raw(token?.ToString() ?? "")';
+                var ddlFloor = document.getElementById("ddlFloor");
+                var ddlRoom = document.getElementById("ddlRoom");
+                var roomId = ddlRoom.value;
+
+                // Validation - Check if floor is selected first
+                if (!ddlFloor.value || ddlFloor.value === "") {
+                    alert("Lütfen önce bir kat seçiniz.");
+                    return;
+                }
+
+                // If room dropdown is disabled, it means no available rooms on this floor
+                if (ddlRoom.disabled) {
+                    alert("Bu katta müsait oda bulunmamaktadır. Lütfen başka bir kat seçiniz.");
+                    return;
+                }
+
+                if (!roomId || roomId === "" || roomId === "0") {
+                    alert("Lütfen bir oda seçiniz.");
+                    return;
+                }
+
+                var room = allRooms.find(r => r.number === roomId);
+                if (!room) {
+                    alert("Seçilen oda bulunamadı. Lütfen tekrar deneyin.");
+                    return;
+                }
+
+                var roomDisplay = room.displayNumber || roomId;
+
+                if (!confirm("Oda " + roomDisplay + " seçilip adınıza rezerve edilecek. Onaylıyor musunuz?")) return;
+
+                // Disable button to prevent double submission
+                var btn = document.getElementById('btnConfirm');
+                if (btn) btn.disabled = true;
+
+                // Post
+                fetch('/RoomSelection/Select', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'token=' + encodeURIComponent(token) + '&roomId=' + encodeURIComponent(roomId)
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.text().then(text => {
+                            throw new Error('HTTP ' + response.status + ': ' + text);
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        // Ödeme sayfasına yönlendir
+                        window.location.href = '/RoomSelection/Payment?token=' + encodeURIComponent(token);
+                    } else {
+                        alert("Hata: " + (data.message || "Bilinmeyen hata"));
+                    }
+                })
+                .catch(error => {
+                    console.error('Error details:', error);
+                    alert("Bir hata oluştu: " + error.message);
+                })
+                .finally(() => {
+                    if (btn) btn.disabled = false;
+                });
+            } else {
+                // Grup kaydı için "ODA EKLE" butonunu kullan
+                alert("Lütfen 'ODA EKLE' butonunu kullanarak her grup üyesi için oda seçiniz.");
+            }
+        }
+    </script>
+</body>
+</html>

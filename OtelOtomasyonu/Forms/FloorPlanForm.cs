@@ -7,276 +7,244 @@ using OtelOtomasyonu.Data;
 using OtelOtomasyonu.Data.Entities;
 using OtelOtomasyonu.Services;
 using System.Drawing;
+using OtelOtomasyonu.Forms.Controls;
 
 namespace OtelOtomasyonu.Forms
 {
     public partial class FloorPlanForm : XtraForm
     {
-        private readonly RoomService _roomService;
-        private readonly ReservationService _reservationService;
-        private string _selectedFloor = "Zemin";
-        private Dictionary<string, SimpleButton> _roomButtons;
+        private HotelContext _context;
+        private int _currentFloor = 0; // Default Zemin Kat
+        private List<RoomControl> _roomControls = new List<RoomControl>();
+        
+        // Coordinates for Upper Floors (Guest Rooms 101-110)
+        // ALIGNED to "Ada Lovelady" Image Status Pillars (Wide Layout - Vertical Pills)
+        private PointF[] _guestRoomLocations = new PointF[]
+        {
+            // Left Column (Approx 7.8% from left - CENTER of Pillar)
+            new PointF(0.078f, 0.22f),   // 101
+            new PointF(0.078f, 0.36f),   // 102
+            new PointF(0.078f, 0.50f),   // 103
+            new PointF(0.078f, 0.64f),   // 104
+            new PointF(0.078f, 0.78f),   // 105
+            
+            // Right Column (Approx 92.2% from left - CENTER of Pillar)
+            new PointF(0.922f, 0.22f),  // 106
+            new PointF(0.922f, 0.36f),  // 107
+            new PointF(0.922f, 0.50f),  // 108
+            new PointF(0.922f, 0.64f),  // 109
+            new PointF(0.922f, 0.78f)   // 110
+        };
 
         public FloorPlanForm()
         {
             InitializeComponent();
-            _roomService = new RoomService();
-            _reservationService = new ReservationService();
-            _roomButtons = new Dictionary<string, SimpleButton>();
-            LoadBackgroundImage();
-            LoadFloors();
-            LoadFloorPlan();
+            _context = new HotelContext();
+            pnlMap.BackgroundImageLayout = ImageLayout.Stretch;
+            pnlMap.Resize += PnlMap_Resize;
+            
+            // Apply Dark Theme
+            this.LookAndFeel.UseDefaultLookAndFeel = false;
+            this.LookAndFeel.SkinName = "DevExpress Dark Style";
+            ApplyTheme();
         }
 
-        private void LoadBackgroundImage()
+        private void FloorPlanForm_Load(object sender, EventArgs e)
         {
-            try
+            LoadFloors();
+            LoadRoomsForFloor(_currentFloor);
+        }
+
+        private void ApplyTheme()
+        {
+            // Form background
+            this.Appearance.BackColor = Color.Black;
+            this.Appearance.Options.UseBackColor = true;
+            
+            // Sidebar
+            if (pnlSidebar != null)
             {
-                // Kat planı görseli Resources'dan yükle
-                // picFloorPlan.Properties.Image = Properties.Resources.FloorPlan;
-                // Görsel yoksa sessizce devam et
+                pnlSidebar.Appearance.BackColor = Color.FromArgb(20, 20, 20);
+                pnlSidebar.Appearance.Options.UseBackColor = true;
             }
-            catch
+            
+            // Floor list
+            if (lstFloors != null)
             {
-                // Görsel yoksa sessizce devam et
+                lstFloors.Appearance.BackColor = Color.FromArgb(30, 30, 30);
+                lstFloors.Appearance.ForeColor = Color.Gold;
+                lstFloors.Appearance.Font = new Font("Segoe UI", 12F);
+            }
+            
+            // Title label
+            if (lblFloorsTitle != null)
+            {
+                lblFloorsTitle.Appearance.ForeColor = Color.Gold;
+                lblFloorsTitle.Appearance.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
             }
         }
 
         private void LoadFloors()
         {
-            cmbFloor.Properties.Items.Clear();
-            cmbFloor.Properties.Items.AddRange(new object[] { "Zemin", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" });
-            cmbFloor.SelectedIndex = 0;
+            lstFloors.Items.Clear();
+            lstFloors.Items.Add("Zemin Kat");
+            for (int i = 1; i <= 10; i++)
+            {
+                lstFloors.Items.Add($"{i}. Kat");
+            }
+            lstFloors.SelectedIndex = 0;
         }
 
-        private void LoadFloorPlan()
+        private void LstFloors_SelectedIndexChanged(object sender, EventArgs e)
         {
-            try
+            _currentFloor = lstFloors.SelectedIndex;
+            LoadRoomsForFloor(_currentFloor);
+        }
+
+        private void LoadRoomsForFloor(int floor)
+        {
+            pnlMap.Controls.Clear();
+            _roomControls.Clear();
+            pnlMap.BackgroundImage = null; 
+
+            string resourcePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources");
+            string imageFileName = (floor == 0) ? "floor_ground.jpg" : "floor_upper.jpg";
+            string fullPath = System.IO.Path.Combine(resourcePath, imageFileName);
+
+            PictureBox pbBackground = null;
+
+            if (System.IO.File.Exists(fullPath))
             {
-                panelRooms.Controls.Clear();
-                _roomButtons.Clear();
+                pbBackground = new PictureBox();
+                try { pbBackground.Image = Image.FromFile(fullPath); } catch {}
+                pbBackground.SizeMode = PictureBoxSizeMode.StretchImage;
+                pbBackground.Dock = DockStyle.Fill;
+                pbBackground.BackColor = Color.Black;
+                pnlMap.Controls.Add(pbBackground);
+            }
+            else
+            {
+                pnlMap.BackColor = Color.Black;
+            }
 
-                using (var context = new HotelContext())
+            if (floor == 0) return;
+
+            var rooms = _context.Rooms.Where(r => r.Floor == floor).ToList();
+            
+            // Aktif ve gelecekteki rezervasyonları kontrol et (bugün ve gelecek için)
+            var today = DateTime.Today;
+            var activeReservations = _context.Reservations
+                .Where(r => r.Status != ReservationStatus.Cancelled && 
+                           r.Status != ReservationStatus.Completed &&
+                           r.EndDate >= today) // Bugün veya gelecekte biten rezervasyonlar
+                .ToList();
+            
+            for (int i = 0; i < _guestRoomLocations.Length; i++)
+            {
+                string targetNum = $"{floor * 100 + (i + 1)}";
+                Room room = rooms.FirstOrDefault(r => r.RoomNumber == targetNum);
+
+                RoomControl rc = new RoomControl();
+                rc.Size = new Size(40, 100); 
+                rc.Location = new Point(0,0);
+                
+                if (room != null)
                 {
-                    var today = DateTime.Today;
-                    var reservations = context.Reservations
-                        .Where(r => r.Status == ReservationStatus.Confirmed || 
-                                    r.Status == ReservationStatus.Pending)
-                        .Where(r => r.StartDate <= today && r.EndDate >= today)
-                        .ToList();
-
-                    // Oda numaralandırması: 
-                    // Zemin: 001-010 veya 101-110
-                    // 1.Kat: 101-110, 2.Kat: 201-210, ..., 10.Kat: 1001-1010
-                    List<Room> allRooms = context.Rooms.ToList();
-                    List<Room> rooms;
+                    rc.RoomId = room.Id;
+                    rc.RoomNumber = room.RoomNumber;
                     
-                    if (_selectedFloor == "Zemin")
+                    // Rezervasyonları kontrol et - gerçek durumu göster
+                    var roomReservations = activeReservations.Where(r => r.RoomId == room.Id).ToList();
+                    if (roomReservations.Any())
                     {
-                        // Zemin katı: 001-010 formatında
-                        rooms = allRooms
-                            .Where(r => r.RoomNumber.StartsWith("00") && r.RoomNumber.Length == 3)
-                            .OrderBy(r => r.RoomNumber)
-                            .ToList();
-                        
-                        // Eğer 001-010 formatında oda yoksa, 101-110'u kontrol et (alternatif numaralandırma)
-                        if (!rooms.Any())
-                        {
-                            rooms = allRooms
-                                .Where(r => {
-                                    int roomNum;
-                                    if (int.TryParse(r.RoomNumber, out roomNum))
-                                        return roomNum >= 101 && roomNum <= 110;
-                                    return false;
-                                })
-                                .OrderBy(r => r.RoomNumber)
-                                .ToList();
-                        }
+                        // Aktif veya gelecekteki rezervasyon var, oda dolu
+                        rc.Status = RoomStatus.Occupied;
                     }
                     else
                     {
-                        int floorNum = int.Parse(_selectedFloor);
-                        // Her kat için: 1.Kat=101-110, 2.Kat=201-210, ..., 10.Kat=1001-1010
-                        int startRoom = floorNum * 100 + 1;
-                        int endRoom = floorNum * 100 + 10;
-                        
-                        rooms = allRooms
-                            .Where(r => {
-                                int roomNum;
-                                if (int.TryParse(r.RoomNumber, out roomNum))
-                                {
-                                    return roomNum >= startRoom && roomNum <= endRoom;
-                                }
-                                return false;
-                            })
-                            .OrderBy(r => r.RoomNumber)
-                            .ToList();
+                        // Aktif rezervasyon yok, oda durumunu göster
+                        rc.Status = room.Status;
                     }
+                    
+                    rc.RoomClick += Rc_RoomClick;
+                }
+                else
+                {
+                    rc.RoomNumber = targetNum;
+                    rc.Status = RoomStatus.Maintenance;
+                }
+                
+                pnlMap.Controls.Add(rc);
+                rc.BringToFront();
+                _roomControls.Add(rc);
+            }
+            
+            RepositionRooms();
 
-                    // Her katta 10 oda olacak şekilde 2x5 grid düzeni
-                    int x = 20, y = 20;
-                    int buttonWidth = 130;
-                    int buttonHeight = 90;
-                    int spacing = 15;
-                    int roomsPerRow = 5; // Her satırda 5 oda
+            if (pbBackground != null) pbBackground.SendToBack();
+        }
 
-                    // Eğer oda yoksa, beklenen 10 odayı göster (placeholder)
-                    if (!rooms.Any())
+        private void PnlMap_Resize(object sender, EventArgs e)
+        {
+             RepositionRooms();
+        }
+
+        private void RepositionRooms()
+        {
+            if (_currentFloor == 0) return; 
+            if (_roomControls == null || _roomControls.Count == 0) return;
+
+            for (int i = 0; i < _roomControls.Count; i++)
+            {
+                if (i >= _guestRoomLocations.Length) break;
+
+                RoomControl rc = _roomControls[i];
+                PointF percentLoc = _guestRoomLocations[i];
+
+                int x = (int)(pnlMap.Width * percentLoc.X);
+                int y = (int)(pnlMap.Height * percentLoc.Y);
+                
+                x -= rc.Width / 2;
+                y -= rc.Height / 2;
+
+                rc.Location = new Point(x, y);
+            }
+        }
+
+        private void Rc_RoomClick(object sender, EventArgs e)
+        {
+            RoomControl clickedRoom = sender as RoomControl;
+            if (clickedRoom != null && clickedRoom.RoomId > 0 && clickedRoom.Status == RoomStatus.Available)
+            {
+                var room = _context.Rooms.Find(clickedRoom.RoomId);
+                if (room != null)
+                {
+                    int personCount = 1;
+                    if (room.Type == RoomType.Double) personCount = 2;
+                    else if (room.Type == RoomType.Triple) personCount = 3;
+                    else if (room.Type == RoomType.Quadruple) personCount = 4;
+                    else if (room.Type == RoomType.Suite) personCount = 2;
+
+                    string statusText = "DURUM: BOŞ";
+                    if (room.Status == RoomStatus.Occupied) statusText = "DURUM: DOLU";
+                    else if (room.Status == RoomStatus.Cleaning) statusText = "DURUM: TEMİZLİK";
+                    else if (room.Status == RoomStatus.Maintenance) statusText = "DURUM: BAKIMDA";
+
+                    using (var popup = new RoomDetailPopup(
+                        room.RoomNumber, 
+                        room.Description, 
+                        room.Price, 
+                        personCount,
+                        statusText))
                     {
-                        for (int i = 1; i <= 10; i++)
-                        {
-                            string roomNumber = _selectedFloor == "Zemin" 
-                                ? $"00{i:D2}" 
-                                : $"{int.Parse(_selectedFloor) * 100 + i}";
-                            
-                            CreateRoomButton(roomNumber, RoomDisplayStatus.Available, 
-                                new Point(x, y), new Size(buttonWidth, buttonHeight), null);
-                            
-                            x += buttonWidth + spacing;
-                            if (i % roomsPerRow == 0)
-                            {
-                                x = 20;
-                                y += buttonHeight + spacing;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Mevcut odaları göster
-                        foreach (var room in rooms)
-                        {
-                            var reservation = reservations.FirstOrDefault(r => r.RoomId == room.Id);
-                            var status = GetRoomStatus(room, reservation);
-                            
-                            CreateRoomButton(room.RoomNumber, status, 
-                                new Point(x, y), new Size(buttonWidth, buttonHeight), room);
-                            
-                            x += buttonWidth + spacing;
-                            if (_roomButtons.Count % roomsPerRow == 0)
-                            {
-                                x = 20;
-                                y += buttonHeight + spacing;
-                            }
-                        }
+                        popup.ShowDialog();
                     }
                 }
             }
-            catch (Exception ex)
+            else if (clickedRoom != null && clickedRoom.RoomId > 0)
             {
-                XtraMessageBox.Show("Kat planı yüklenirken hata: " + ex.Message);
+                 XtraMessageBox.Show($"Oda: {clickedRoom.RoomNumber}\nDurum: {clickedRoom.Status}", "Bilgi", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
-
-        private RoomDisplayStatus GetRoomStatus(Room room, Reservation reservation)
-        {
-            if (reservation != null && reservation.Status == ReservationStatus.Confirmed)
-                return RoomDisplayStatus.Occupied;
-            if (reservation != null && reservation.Status == ReservationStatus.Pending)
-                return RoomDisplayStatus.Reserved;
-            if (room.Status == RoomStatus.Cleaning)
-                return RoomDisplayStatus.Cleaning;
-            if (room.Status == RoomStatus.Maintenance)
-                return RoomDisplayStatus.Maintenance;
-            return RoomDisplayStatus.Available;
-        }
-
-        private Color GetStatusColor(RoomDisplayStatus status)
-        {
-            switch (status)
-            {
-                case RoomDisplayStatus.Available:
-                    return Color.FromArgb(76, 175, 80); // Yeşil
-                case RoomDisplayStatus.Occupied:
-                    return Color.FromArgb(244, 67, 54); // Kırmızı
-                case RoomDisplayStatus.Reserved:
-                    return Color.FromArgb(33, 150, 243); // Mavi
-                case RoomDisplayStatus.Cleaning:
-                    return Color.FromArgb(255, 152, 0); // Turuncu
-                case RoomDisplayStatus.Maintenance:
-                    return Color.FromArgb(158, 158, 158); // Gri
-                default:
-                    return Color.Gray;
-            }
-        }
-
-        private string GetStatusText(RoomDisplayStatus status)
-        {
-            switch (status)
-            {
-                case RoomDisplayStatus.Available:
-                    return "Boş";
-                case RoomDisplayStatus.Occupied:
-                    return "Dolu";
-                case RoomDisplayStatus.Reserved:
-                    return "Rezerve";
-                case RoomDisplayStatus.Cleaning:
-                    return "Temizlik";
-                case RoomDisplayStatus.Maintenance:
-                    return "Bakım";
-                default:
-                    return "-";
-            }
-        }
-
-        private void BtnRoom_Click(object sender, EventArgs e)
-        {
-            var btn = sender as SimpleButton;
-            var room = btn?.Tag as Room;
-            if (room != null)
-            {
-                var roomForm = new RoomDetailsForm(room);
-                roomForm.ShowDialog();
-                LoadFloorPlan(); // Yenile
-            }
-        }
-
-        private void CreateRoomButton(string roomNumber, RoomDisplayStatus status, Point location, Size size, Room room)
-        {
-            var btnRoom = new SimpleButton
-            {
-                Text = $"{roomNumber}\r\n{GetStatusText(status)}",
-                Location = location,
-                Size = size,
-                Appearance = { 
-                    BackColor = GetStatusColor(status),
-                    ForeColor = Color.White,
-                    Font = new Font("Segoe UI", 9F, FontStyle.Bold),
-                    TextOptions = { HAlignment = DevExpress.Utils.HorzAlignment.Center, VAlignment = DevExpress.Utils.VertAlignment.Center }
-                },
-                Tag = room
-            };
-
-            if (room != null)
-            {
-                btnRoom.Click += BtnRoom_Click;
-            }
-            
-            panelRooms.Controls.Add(btnRoom);
-            _roomButtons[roomNumber] = btnRoom;
-        }
-
-        private void cmbFloor_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (cmbFloor.SelectedItem != null)
-            {
-                _selectedFloor = cmbFloor.SelectedItem.ToString();
-                LoadFloorPlan();
-            }
-        }
-
-        private void btnRefresh_Click(object sender, EventArgs e)
-        {
-            LoadFloorPlan();
-        }
-    }
-
-    public enum RoomDisplayStatus
-    {
-        Available,
-        Occupied,
-        Reserved,
-        Cleaning,
-        Maintenance
     }
 }
-

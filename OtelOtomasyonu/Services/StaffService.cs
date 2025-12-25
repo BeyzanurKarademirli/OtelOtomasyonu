@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using OtelOtomasyonu.Data;
 using OtelOtomasyonu.Data.Entities;
+using System.Data.Entity; // Ensure EF usage references are correct for AsNoTracking if EF6, or Microsoft.EntityFrameworkCore if EF Core
 
 namespace OtelOtomasyonu.Services
 {
@@ -13,6 +14,7 @@ namespace OtelOtomasyonu.Services
             using (var context = new HotelContext())
             {
                 return context.Users
+                    .AsNoTracking()
                     .Where(u => u.Role == UserRole.Staff)
                     .ToList();
             }

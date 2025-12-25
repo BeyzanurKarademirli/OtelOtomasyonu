@@ -1,0 +1,100 @@
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ödeme Başarılı - Ada Lovelady's Hotel</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #D4AF37;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 600px;
+            text-align: center;
+            background-color: #1a1a1a;
+            padding: 50px;
+            border-radius: 10px;
+            border: 2px solid #D4AF37;
+        }
+
+        .success-icon {
+            font-size: 80px;
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #D4AF37;
+            margin-bottom: 20px;
+        }
+
+        p {
+            color: #fff;
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .info-box {
+            background-color: #000;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+            border: 1px solid #333;
+            text-align: left;
+        }
+
+        .info-box h3 {
+            color: #D4AF37;
+            margin-top: 0;
+        }
+
+        .info-box ul {
+            color: #fff;
+            line-height: 2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="success-icon">✓</div>
+        <h1>Ödeme Başarıyla Tamamlandı!</h1>
+        <p>Rezervasyonunuz onaylandı.</p>
+        <p>Ödeme bilgileriniz ve rezervasyon detaylarınız e-posta adresinize gönderilmiştir.</p>
+        
+        <div class="info-box">
+            <h3>Önemli Bilgiler:</h3>
+            <ul>
+                <li><strong>Oda Anahtarı:</strong> Anahtarınızı resepsiyondan alabilirsiniz.</li>
+                <li><strong>Yemek Saatleri:</strong>
+                    <ul>
+                        <li>Kahvaltı: 07:00 - 10:00</li>
+                        <li>Öğle Yemeği: 12:00 - 14:00</li>
+                        <li>Akşam Yemeği: 19:00 - 21:00</li>
+                    </ul>
+                </li>
+                <li><strong>Oda Temizlik Saatleri:</strong> 10:00 - 14:00</li>
+            </ul>
+        </div>
+
+        <p style="margin-top: 30px; color: #888; font-size: 14px;">
+            İyi tatiller dileriz!<br>
+            <strong style="color: #D4AF37;">Ada Lovelady's Hotel</strong>
+        </p>
+    </div>
+</body>
+</html>
+

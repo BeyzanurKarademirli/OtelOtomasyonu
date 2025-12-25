@@ -68,6 +68,22 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\Program Files\DevExpress 24.1\Components\Bin\Framework\DevExpress.XtraGrid.v24.1.dll</HintPath>
     </Reference>
+    <Reference Include="DevExpress.Charts.v24.1.Core, Version=24.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files\DevExpress 24.1\Components\Bin\Framework\DevExpress.Charts.v24.1.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraCharts.v24.1, Version=24.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files\DevExpress 24.1\Components\Bin\Framework\DevExpress.XtraCharts.v24.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraCharts.v24.1.UI, Version=24.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files\DevExpress 24.1\Components\Bin\Framework\DevExpress.XtraCharts.v24.1.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraCharts.v24.1.Wizard, Version=24.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files\DevExpress 24.1\Components\Bin\Framework\DevExpress.XtraCharts.v24.1.Wizard.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.5.1\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -88,6 +104,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\Entities\Entities.cs" />
+    <Compile Include="Data\HotelDbInitializer.cs" />
     <Compile Include="Data\HotelContext.cs" />
     <Compile Include="Forms\AdminDashboard.cs">
       <SubType>Form</SubType>
@@ -100,6 +117,27 @@
     </Compile>
     <Compile Include="Forms\HotelInfoForm.Designer.cs">
       <DependentUpon>HotelInfoForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\StaffAddForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\StaffAddForm.Designer.cs">
+      <DependentUpon>StaffAddForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\RoomForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\RoomForm.Designer.cs">
+      <DependentUpon>RoomForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\RoomDetailPopup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Controls\RoomControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Controls\RoomControl.Designer.cs">
+      <DependentUpon>RoomControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\ChatForm.cs">
       <SubType>Form</SubType>
@@ -137,23 +175,49 @@
     <Compile Include="Forms\LoginForm.Designer.cs">
       <DependentUpon>LoginForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\IncomeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\IncomeForm.Designer.cs">
+      <DependentUpon>IncomeForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\OccupancyForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\OccupancyForm.Designer.cs">
+      <DependentUpon>OccupancyForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\CertificateForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\CertificateForm.Designer.cs">
+      <DependentUpon>CertificateForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ReservationForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\ReservationForm.Designer.cs">
       <DependentUpon>ReservationForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\RoomForm.cs">
+    
+    <Compile Include="Forms\SlideShowForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\RoomForm.Designer.cs">
-      <DependentUpon>RoomForm.cs</DependentUpon>
+    <Compile Include="Forms\SlideShowForm.Designer.cs">
+      <DependentUpon>SlideShowForm.cs</DependentUpon>
     </Compile>
+
     <Compile Include="Forms\StaffDashboard.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\StaffDashboard.Designer.cs">
       <DependentUpon>StaffDashboard.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\UsersForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\UsersForm.Designer.cs">
+      <DependentUpon>UsersForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\StaffForm.cs">
       <SubType>Form</SubType>
@@ -180,13 +244,17 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Services\AuthService.cs" />
+    <Compile Include="Services\AuthorizationService.cs" />
     <Compile Include="Services\Session.cs" />
     <Compile Include="Services\GeminiChatService.cs" />
     <Compile Include="Services\NotificationService.cs" />
     <Compile Include="Services\ReservationService.cs" />
     <Compile Include="Services\RoomService.cs" />
+    <Compile Include="Services\FinancialService.cs" />
     <Compile Include="Services\StaffService.cs" />
+    <Compile Include="Services\MailService.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
+
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
@@ -205,6 +273,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="footer_bg_v2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\floor_ground.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\floor_upper.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
