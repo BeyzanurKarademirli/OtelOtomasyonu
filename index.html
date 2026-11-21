@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ada Lovelady&#x27;s Hotel - Otel Otomasyon Sistemi</title>
+<meta name="description" content="Modern ve kapsamlı bir otel yönetim sistemi. Hem masaüstü (WinForms) hem de web tabanlı (ASP.NET Core MVC) uygulamalar içeren hibrit bir çözümdür.">
+<meta property="og:title" content="Ada Lovelady&#x27;s Hotel - Otel Otomasyon Sistemi">
+<meta property="og:description" content="Modern ve kapsamlı bir otel yönetim sistemi. Hem masaüstü (WinForms) hem de web tabanlı (ASP.NET Core MVC) uygulamalar içeren hibrit bir çözümdür.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f7f7f9; --surface: #ffffff; --text: #1d1d24; --muted: #5d5d6b; --border: #e4e4ea;
+  --accent: #5b5bd6; --accent-text: #ffffff; --code-bg: #f1f1f5; --hero-a: #ececfb; --hero-b: #f7f7f9;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111116; --surface: #1a1a21; --text: #ececf1; --muted: #a0a0ad; --border: #2c2c36;
+    --accent: #8b8bf5; --accent-text: #111116; --code-bg: #23232c; --hero-a: #1c1c2e; --hero-b: #111116;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.65 Inter, system-ui, -apple-system, "Segoe UI", sans-serif; }
+a { color: var(--accent); }
+.wrap { max-width: 860px; margin: 0 auto; padding: 0 20px; }
+header.hero { background: linear-gradient(180deg, var(--hero-a), var(--hero-b)); border-bottom: 1px solid var(--border); padding: 64px 0 40px; }
+.owner { color: var(--muted); font-size: 14px; font-weight: 500; letter-spacing: .02em; }
+h1.title { font-size: clamp(32px, 6vw, 48px); line-height: 1.1; margin: 8px 0 14px; letter-spacing: -0.02em; }
+.lead { color: var(--muted); font-size: 18px; max-width: 640px; margin: 0 0 22px; }
+.tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 26px; }
+.tag { font-size: 13px; font-weight: 500; padding: 3px 10px; border-radius: 999px; background: var(--surface); border: 1px solid var(--border); }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; border-radius: 10px; font-weight: 600; font-size: 15px; text-decoration: none; border: 1px solid var(--border); background: var(--surface); color: var(--text); }
+.btn.primary { background: var(--accent); color: var(--accent-text); border-color: var(--accent); }
+.btn:hover { filter: brightness(1.06); }
+.clone { margin-top: 20px; display: flex; align-items: center; gap: 8px; max-width: 100%; }
+.clone code { flex: 1; min-width: 0; overflow-x: auto; white-space: nowrap; padding: 9px 12px; border-radius: 8px; background: var(--surface); border: 1px solid var(--border); font: 13px "JetBrains Mono", ui-monospace, monospace; }
+.clone button { padding: 9px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font: inherit; font-size: 13px; cursor: pointer; }
+main { padding: 40px 0 64px; }
+article { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 8px 32px 28px; }
+article h1, article h2, article h3 { line-height: 1.25; margin-top: 1.8em; }
+article h2 { font-size: 22px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+article img { max-width: 100%; height: auto; border-radius: 8px; }
+article { overflow-wrap: anywhere; }
+article code { font: 0.9em "JetBrains Mono", ui-monospace, monospace; background: var(--code-bg); padding: 2px 6px; border-radius: 5px; }
+article pre { background: var(--code-bg); padding: 14px 16px; border-radius: 10px; overflow-x: auto; }
+article pre code { background: none; padding: 0; }
+article table { border-collapse: collapse; width: 100%; display: block; overflow-x: auto; }
+article th, article td { border: 1px solid var(--border); padding: 8px 12px; text-align: left; }
+article th { background: var(--code-bg); }
+footer { color: var(--muted); font-size: 14px; padding: 0 0 40px; text-align: center; }
+@media (max-width: 600px) { article { padding: 4px 18px 20px; } header.hero { padding: 44px 0 32px; } }
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <div class="owner">BeyzanurKarademirli / OtelOtomasyonu</div>
+    <h1 class="title">Ada Lovelady&#x27;s Hotel - Otel Otomasyon Sistemi</h1>
+    <p class="lead">Modern ve kapsamlı bir otel yönetim sistemi. Hem masaüstü (WinForms) hem de web tabanlı (ASP.NET Core MVC) uygulamalar içeren hibrit bir çözümdür.</p>
+    <div class="tags"><span class="tag">C#</span><span class="tag">Razor</span><span class="tag">CSS</span><span class="tag">JavaScript</span></div>
+    <div class="actions">
+      <a class="btn primary" href="https://github.com/BeyzanurKarademirli/OtelOtomasyonu">GitHub'da görüntüle</a>
+      <a class="btn" href="https://github.com/BeyzanurKarademirli/OtelOtomasyonu/archive/refs/heads/master.zip">ZIP olarak indir</a>
+    </div>
+    <div class="clone"><code id="clone">git clone https://github.com/BeyzanurKarademirli/OtelOtomasyonu.git</code><button type="button" onclick="navigator.clipboard.writeText(document.getElementById('clone').textContent).then(()=>{this.textContent='Kopyalandı'})">Kopyala</button></div>
+  </div>
+</header>
+<main>
+  <div class="wrap"><article>
+<h2>🏨 Proje Hakkında</h2>
+<p>Ada Lovelady's Hotel Otomasyon Sistemi, otel yönetimi için geliştirilmiş profesyonel bir yazılımdır. Sistem, müşteri kayıtları, oda yönetimi, rezervasyon takibi, ödeme işlemleri, personel yönetimi ve finansal raporlama gibi tüm otel operasyonlarını tek bir platformda toplar.</p>
+<h2>✨ Özellikler</h2>
+<h3>🖥️ Masaüstü Uygulama (WinForms)</h3>
+<h4>Yönetici Paneli</h4>
+<ul>
+<li><strong>Oda Yönetimi</strong>: Oda bilgileri, durum takibi, kat planı görüntüleme</li>
+<li><strong>Müşteri Kayıtları</strong>: Çoklu kişi kayıt sistemi (1-4 kişi)</li>
+<li><strong>Rezervasyon Yönetimi</strong>: Check-in/Check-out işlemleri</li>
+<li><strong>Personel Yönetimi</strong>: Personel ekleme, düzenleme, yetkilendirme</li>
+<li><strong>Finansal Raporlama</strong>: Gelir-gider takibi, doluluk oranları</li>
+<li><strong>Sertifika Yönetimi</strong>: Personel sertifikaları takibi</li>
+</ul>
+<h4>Personel Paneli</h4>
+<ul>
+<li><strong>Yetki Bazlı Erişim</strong>: Departman ve pozisyona göre kısıtlı erişim</li>
+<li><strong>Müşteri Bilgileri</strong>: Müşteri görüntüleme ve düzenleme</li>
+<li><strong>Check-in/Check-out</strong>: Müşteri giriş-çıkış işlemleri</li>
+<li><strong>Kat Planı</strong>: Oda durumlarını görsel olarak görüntüleme</li>
+<li><strong>Profil Yönetimi</strong>: Personel kendi profil bilgilerini görüntüleme</li>
+</ul>
+<h3>🌐 Web Uygulaması (ASP.NET Core MVC)</h3>
+<h4>Müşteri Özellikleri</h4>
+<ul>
+<li><strong>Online Oda Seçimi</strong>: E-posta ile gönderilen token ile oda seçimi</li>
+<li><strong>Çoklu Kişi Rezervasyonu</strong>: Grup halinde oda seçimi</li>
+<li><strong>Ödeme Simülasyonu</strong>: Güvenli ödeme işlemi</li>
+<li><strong>E-posta Bildirimleri</strong>: </li>
+<li>Oda seçim linki</li>
+<li>Ödeme başarı bildirimi</li>
+<li>Rezervasyon detayları</li>
+<li>Yemek saatleri ve temizlik bilgileri</li>
+<li>İletişim bilgileri</li>
+</ul>
+<h2>🛠️ Teknolojiler</h2>
+<h3>Backend</h3>
+<ul>
+<li><strong>.NET Framework 4.8</strong> (Masaüstü uygulama)</li>
+<li><strong>.NET 8.0</strong> (Web uygulaması)</li>
+<li><strong>Entity Framework Core</strong> (ORM)</li>
+<li><strong>SQL Server</strong> (Veritabanı)</li>
+</ul>
+<h3>Frontend</h3>
+<ul>
+<li><strong>DevExpress WinForms Controls</strong> (Masaüstü UI)</li>
+<li><strong>ASP.NET Core MVC</strong> (Web UI)</li>
+<li><strong>Razor Pages</strong> (Web görünümleri)</li>
+<li><strong>JavaScript/jQuery</strong> (İstemci tarafı işlemler)</li>
+</ul>
+<h3>Diğer</h3>
+<ul>
+<li><strong>SMTP</strong> (E-posta gönderimi)</li>
+<li><strong>LINQ</strong> (Veri sorgulama)</li>
+</ul>
+<h2>📋 Gereksinimler</h2>
+<h3>Sistem Gereksinimleri</h3>
+<ul>
+<li>Windows 10/11 veya Windows Server 2016+</li>
+<li>.NET Framework 4.8</li>
+<li>.NET 8.0 Runtime</li>
+<li>SQL Server 2019 veya üzeri</li>
+<li>Visual Studio 2022 (geliştirme için)</li>
+</ul>
+<h3>Geliştirme Gereksinimleri</h3>
+<ul>
+<li>Visual Studio 2022 Community veya üzeri</li>
+<li>DevExpress WinForms Components (lisanslı)</li>
+<li>SQL Server Management Studio (SSMS)</li>
+</ul>
+<h2>🚀 Kurulum</h2>
+<h3>1. Projeyi İndirin</h3>
+<p>git clone https://github.com/kullaniciadi/otel-otomasyonu.git
+cd otel-otomasyonu### 2. Veritabanı Kurulumu
+1. SQL Server Management Studio'yu açın
+2. Yeni bir veritabanı oluşturun: <code>OtelOtomasyonuDb</code>
+3. <code>appsettings.json</code> dosyasında bağlantı string'ini güncelleyin:
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=localhost;Database=OtelOtomasyonuDb;Trusted_Connection=True;TrustServerCertificate=True;"
+  }
+}### 3. Masaüstü Uygulamasını Çalıştırma
+1. Visual Studio 2022'de <code>OtelOtomasyonu.sln</code> dosyasını açın
+2. <code>OtelOtomasyonu</code> projesini başlangıç projesi olarak ayarlayın
+3. F5 ile çalıştırın
+4. İlk açılışta veritabanı otomatik olarak oluşturulacaktır</p>
+<h3>4. Web Uygulamasını Çalıştırma</h3>
+<ol>
+<li><code>OtelOtomasyonuWeb</code> projesini başlangıç projesi olarak ayarlayın</li>
+<li>F5 ile çalıştırın</li>
+<li>Tarayıcıda <code>https://localhost:5001</code> adresine gidin</li>
+</ol>
+<h2>👥 Kullanıcı Rolleri</h2>
+<h3>Yönetici (Admin)</h3>
+<ul>
+<li>Tüm özelliklere tam erişim</li>
+<li>Personel ekleme/düzenleme</li>
+<li>Finansal raporlara erişim</li>
+<li>Sistem ayarları</li>
+</ul>
+<h3>Personel</h3>
+<h4>İdari Yönetim (BackOffice)</h4>
+<ul>
+<li>Yöneticiye eşit erişim</li>
+<li>Personel bilgilerini görüntüleme</li>
+<li>Finansal raporlara erişim</li>
+</ul>
+<h4>Ön Büro (FrontOffice)</h4>
+<ul>
+<li>Müşteri kayıtları</li>
+<li>Check-in/Check-out</li>
+<li>Kat planı görüntüleme</li>
+<li>Müşteri bilgileri</li>
+</ul>
+<h4>Muhasebe</h4>
+<ul>
+<li>Gelir-gider raporları</li>
+<li>Finansal analizler</li>
+</ul>
+<h2>📧 E-posta Yapılandırması</h2>
+<p>Web uygulamasında e-posta gönderimi için <code>appsettings.json</code> dosyasını yapılandırın:</p>
+<p>{
+  "EmailSettings": {
+    "SmtpServer": "smtp.gmail.com",
+    "SmtpPort": 587,
+    "SenderEmail": "your-email@gmail.com",
+    "SenderPassword": "your-app-password",
+    "EnableSsl": true
+  }
+}<strong>Not:</strong> Gmail kullanıyorsanız, "Uygulama Şifresi" oluşturmanız gerekebilir.</p>
+<h2>🗂️ Proje Yapısı</h2>
+<p>{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=localhost;Database=OtelOtomasyonuDb;Trusted_Connection=True;TrustServerCertificate=True;"
+  }
+}ekilde oluşturulur
+- Rol tabanlı yetkilendirme sistemi
+- Departman bazlı erişim kontrolü</p>
+<h2>📝 Önemli Notlar</h2>
+<h3>Veritabanı</h3>
+<ul>
+<li>İlk çalıştırmada veritabanı otomatik oluşturulur</li>
+<li>Örnek veriler için <code>HotelDbInitializer</code> sınıfını kullanabilirsiniz</li>
+</ul>
+<h3>E-posta Gönderimi</h3>
+<ul>
+<li>E-posta gönderimi için SMTP ayarlarının doğru yapılandırılması gerekir</li>
+<li>Gmail kullanıyorsanız 2FA aktif olmalı ve uygulama şifresi kullanılmalıdır</li>
+</ul>
+<h3>DevExpress Lisansı</h3>
+<ul>
+<li>Proje DevExpress kontrolleri kullanmaktadır</li>
+<li>Lisanslı bir DevExpress lisansı gereklidir</li>
+</ul>
+<h2>🐛 Bilinen Sorunlar</h2>
+<ul>
+<li>Şifreler hash'lenmemiş durumda (üretim için güvenlik güncellemesi gerekli)</li>
+<li>Chatbot özelliği kaldırılmıştır</li>
+</ul>
+<h2>📞 İletişim</h2>
+<p><strong>Ada Lovelady's Hotel</strong>
+- 📧 E-posta: adaloveladysho<strong><em>@gmail.com
+- 📱 Telefon: 0551000</em></strong>*
+- 📍 Adres: İZMİR, TÜRKİYE</p>
+<h2>📄 Lisans</h2>
+<p>Bu proje özel bir projedir ve tüm hakları saklıdır.</p>
+<h2>🙏 Teşekkürler</h2>
+<p>Projeyi kullandığınız için teşekkür ederiz. Sorularınız veya önerileriniz için iletişime geçebilirsiniz.</p>
+<hr />
+<p><strong>Not:</strong> Bu proje eğitim ve ticari amaçlarla geliştirilmiştir. Üretim ortamında kullanmadan önce güvenlik ve performans testlerinden geçirilmelidir.</p>
+  </article></div>
+</main>
+<footer><div class="wrap"><a href="https://github.com/BeyzanurKarademirli">@BeyzanurKarademirli</a> · <a href="https://github.com/BeyzanurKarademirli/OtelOtomasyonu">Kaynak kod</a></div></footer>
+</body>
+</html>
